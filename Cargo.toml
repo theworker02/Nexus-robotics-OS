@@ -24,7 +24,7 @@ repository = "https://github.com/magnexis/nexus-robotics"
 homepage = "https://magnexis.github.io/nexus-robotics"
 readme = "README.md"
 keywords = ["robotics", "simulation", "automation"]
-categories = ["robotics", "simulation"]
+categories = ["simulation", "development-tools"]
 
 [workspace.lints.rust]
 unsafe_code = "forbid"

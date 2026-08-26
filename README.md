@@ -1,5 +1,7 @@
 <p align="center">
-  <img src="assets/brand/horizontal.svg" width="440" alt="Nexus Robotics OS" />
+  <a href="https://github.com/theworker02/Nexus-robotics-OS/releases/tag/v4.2.0-rc.1">
+    <img src="assets/brand/github-banner.svg" alt="Nexus Robotics OS — capability-driven robotics infrastructure" width="100%" />
+  </a>
 </p>
 
 <h1 align="center">Nexus Robotics OS</h1>
@@ -7,399 +9,379 @@
 <p align="center"><strong>Make simple robots capable. Make capable robots yours.</strong></p>
 
 <p align="center">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-1f6feb?style=flat-square" alt="Apache-2.0 license" /></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/release-4.2.0--rc.1-1f6feb?style=flat-square" alt="Release 4.2.0 RC.1" /></a>
-  <a href="SECURITY.md"><img src="https://img.shields.io/badge/security-policy-1f6feb?style=flat-square" alt="Security policy" /></a>
-  <a href="docs/hardware-validation.md"><img src="https://img.shields.io/badge/validation-simulation--first-2878e8?style=flat-square" alt="Simulation-first validation" /></a>
+  <a href="https://github.com/theworker02/Nexus-robotics-OS/releases/tag/v4.2.0-rc.1"><img src="https://img.shields.io/badge/release-4.2.0--rc.1-2878e8?style=for-the-badge" alt="Release 4.2.0 RC.1" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-101827?style=for-the-badge" alt="Apache-2.0 license" /></a>
+  <a href="https://github.com/theworker02/Nexus-robotics-OS/actions"><img src="https://img.shields.io/github/actions/workflow/status/theworker02/Nexus-robotics-OS/ci.yml?style=for-the-badge&label=CI" alt="CI status" /></a>
+  <a href="docs/releases/4.2-validation.md"><img src="https://img.shields.io/badge/validation-simulation--first-61a5ff?style=for-the-badge" alt="Simulation-first validation" /></a>
 </p>
 
-Nexus Robotics OS is a Rust-first, hardware-agnostic robotics platform for skills, configurable intelligence, learning, simulation, safety, connected tools, and heterogeneous robotic hardware. It gives applications and robot skills one stable, capability-driven interface while preserving the robotics stack already in place: simulator, ROS 2 graph, LeRobot workflow, vendor software, or custom hardware adapter.
+<p align="center">
+  <a href="https://github.com/theworker02/Nexus-robotics-OS/releases">Releases</a> ·
+  <a href="https://magnexis.github.io/nexus-robotics">Website</a> ·
+  <a href="docs/">Documentation</a> ·
+  <a href="CONTRIBUTING.md">Contribute</a>
+</p>
 
-> **Give simple robots capabilities far beyond their hardware.**
+> **Nexus is a Rust-first, capability-driven robotics platform for simulation, skills, safety, learning, and heterogeneous hardware integration.**
 
-Version 4.2.0-rc.1 consolidates **Nexus Brain**, adaptive hardware intelligence, deterministic skills, Model Fabric boundaries, simulation, Proving Ground evidence, and integration foundations into a public release candidate. It profiles confirmed robot hardware, calculates a transparent Nexus Capability Index (NCI), derives feature levels and a memory budget, and keeps unvalidated providers, transports, and physical autonomy explicitly disabled.
+Nexus gives applications one stable operating model while preserving the stack already in place: a simulator, ROS 2 graph, LeRobot workflow, vendor SDK, or custom adapter. Skills declare capabilities instead of robot brands. Safety remains deterministic. Evidence labels distinguish software checks from simulation, HIL, vendor, and physical-robot validation.
 
-Nexus does not promise that one binary runs on every robot. It provides the contracts, safety boundary, simulation tools, and integration model required to make heterogeneous robots interoperable when an adapter and capability profile exist.
+**Current channel:** `4.2.0-rc.1` — public release candidate. This release is local- and simulation-first. It does not claim universal hardware support, live ROS 2 transport, external model-provider access, live MCP/device transport, vendor certification, HIL, or production autonomy.
 
-> Write behaviors against capabilities—not robot brands.
+## Contents
+
+- [A visual tour](#a-visual-tour)
+- [Why Nexus](#why-nexus)
+- [What ships in 4.2](#what-ships-in-42)
+- [Quick start](#quick-start)
+- [Run the simulator](#run-the-simulator)
+- [Use the CLI](#use-the-cli)
+- [Build and test](#build-and-test)
+- [Docker workflow](#docker-workflow)
+- [Install published crates](#install-published-crates)
+- [Architecture](#architecture)
+- [Safety and evidence](#safety-and-evidence)
+- [Integration status](#integration-status)
+- [Repository map](#repository-map)
+- [Documentation](#documentation)
+- [Contributing](#contributing)
+
+## A visual tour
+
+<p align="center">
+  <img src="assets/brand/social-card.svg" alt="Nexus Robotics OS brand card" width="860" />
+</p>
+
+The repository currently ships branded SVG presentation assets rather than recorded robot footage. The examples below are deterministic terminal workflows and Mermaid diagrams, so they can be replayed locally without implying that a screenshot, GIF, HIL run, or physical robot demonstration exists.
+
+```text
+┌──────────────────────────────────────────────────────────────────────┐
+│  NEXUS CLI  →  GOAL / TASK  →  POLICY + APPROVAL  →  SKILL           │
+│       ↓             ↓                 ↓                 ↓             │
+│  PROFILE       CAPABILITIES       SAFETY         REPLAY + TELEMETRY   │
+│       └────────────────────── NXR-2 SIMULATOR ──────────────────────┘ │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
+```mermaid
+flowchart LR
+  A[Application / CLI] --> B[Goal or Task]
+  B --> C[NIL policy and approval]
+  C --> D[Deterministic skill]
+  D --> E[Safety Governor]
+  E --> F[Capability-aware adapter]
+  F --> G{Simulated or physical target}
+  G --> H[Replay, telemetry, evidence]
+  H --> B
+```
 
 ## Why Nexus
 
-Robotics software is fragmented by mechanical design, middleware, simulator, training workflow, and vendor SDK. Rebuilding an application or behavior for each stack is expensive and makes safety, replay, and validation inconsistent.
-
-Nexus sits between applications and those stacks:
+Robotics software is fragmented by mechanical design, middleware, simulator, training workflow, and vendor SDK. Nexus sits between those systems:
 
 ```text
-Applications, Studio, Web Console, CLI
-                 │
-         Nexus Runtime
-                 │
-Skills · Tasks · Safety · Identity · Telemetry · Replay
-                 │
-    Nexus Capability Model (NCM)
-                 │
-ROS 2 · LeRobot · Nori community layer · Custom HAL · Simulator
-                 │
-       Physical or simulated robot
+Applications · Studio · Web Console · CLI
+                     │
+              Nexus Runtime
+                     │
+  Skills · Tasks · Safety · Identity · Telemetry · Replay
+                     │
+          Nexus Capability Model (NCM)
+                     │
+ ROS 2 · LeRobot · Nori layer · Custom HAL · Simulator
+                     │
+              Simulated or physical robot
 ```
 
-The platform’s job is not to replace a vendor’s low-level system. Its job is to make compatible systems discoverable, observable, testable, and safer to program through a shared operating model.
+The platform does not replace a vendor’s low-level controller. It makes compatible systems discoverable, observable, testable, and safer to program through shared contracts.
 
-## Flagship features
+## What ships in 4.2
 
-### SenseHopping
+- **Nexus Brain:** hardware manifests, capability profiling, NCI scoring, N0–N4 recommendations, feature resolution, memory budgets, and workload guidance.
+- **Deterministic runtime:** skills, tasks, permissions, safety preconditions, resource locks, watchdogs, cancellation, recovery, telemetry, and replay records.
+- **NCM 2.5:** versioned capability resources with properties, quality thresholds, alternatives, and provenance.
+- **NXR simulation:** deterministic NXR-1/NXR-2 robots, VirtualBus, virtual servos, fault injection, warehouse-fetch scenarios, and structured events.
+- **Proving Ground:** L0–L5 evidence labels, virtual hardware checks, seeded scenarios, and reproducible reports.
+- **Integration foundations:** ROS 2 capability mapping, LeRobot episode contracts, Nori community compatibility surfaces, and an adapter SDK.
+- **Gateway and fleet primitives:** `nexusd`, local connection state, conservative telemetry buffering, and capability-aware scheduling.
+- **Developer surface:** Rust SDK, CLI, package metadata, examples, specifications, website, CI, and release documentation.
 
-> Dynamically route information requirements across healthy available robot sensors, then fuse compatible modalities when it improves the estimate.
-
-Skills request information such as obstacle distance or door geometry rather than hard-coding a sensor model. The router records primary selection, fallback, confidence, and reason in replay evidence.
-
-### StructureScan
-
-> Build a versioned understanding of visible and instrument-accessible walls, doors, openings, surfaces, and structural changes.
-
-StructureScan includes DoorScan, material estimates with uncertainty, and StructureDiff. It explicitly excludes through-wall person detection and covert surveillance workflows.
-
-### Active Learning
-
-> Run controlled simulation-first learning sessions where failed tasks produce bounded, measurable, auditable improvement proposals.
-
-Active Learning may optimize safe parameters but can never weaken Safety Governor limits or silently promote a learned behavior to production.
-
-### Nexus Proving Ground
-
-> Earn repeatable evidence before actuator access—not merely a successful compile.
-
-Proving Ground combines L0 software checks, L1 adapter-facing virtual hardware, seeded WorldForge scenarios, adversarial fault injection, replayable reports, and a future Gazebo/ROS physics backend. It reports every unearned level explicitly as `NOT RUN`.
-
-## What v3.5 includes
-
-- **Adaptive Intelligence Runtime**: the `nexus-brain` Rust crate, hardware manifests, capability profiling, NCI scoring, N0-N4 recommendations, feature resolution, MemCore memory budgets, pressure responses, local/edge workload planning, model-fit guidance, and cost-bounded upgrade advice.
-- **Hardware-aware CLI**: inspect host compute, validate `robot.nexus.toml`, emulate constrained hardware, inspect a Brain plan, recommend model placement, advise upgrades, and produce a C1 emulated minimum-robot profile result.
-- **Adaptive autonomy foundation**: NIL intelligence profiles, granular capability grants and permission decisions, explainable goal plans, approval gates, operating-envelope reporting, local experience memory, automation/routine domain models, and a privacy-aware compute router.
-- **Goal-first CLI**: preview and run policy-governed goals with `nexus goal`, inspect an autonomy envelope with `nexus autonomy`, and run the deterministic `nexus bench simple-robot` reference benchmark.
-- **NCM 2.5** semantic capability resources with versions, properties, quality thresholds, alternatives, and provenance.
-- **Reliable skills**: 35 built-in, simulation-validated skill contracts spanning motion, manipulation, perception, interaction, and system behavior.
-- **Safety infrastructure**: capability checks, preconditions, speed/joint limits, emergency stop, effective vendor limits, exclusive resource locks, watchdogs, and no-auto-resume recovery.
-- **Simulation and replay**: NXR-1, NXR-2, deterministic scenarios, VirtualBus, virtual servos, fault injection, structured events, telemetry, and replay records.
-- **Proving Ground**: validation levels L0–L5, VirtualRobotBus device faults, seeded WorldForge trials, certification reports, and a Gazebo Harmonic/ROS 2 bridge scaffold.
-- **Integration foundations**: Nori community profile, Nori-Lab session boundary, MotorLab-style diagnostics, LeRobot episode bridge, ROS 2 capability mapper, and integration SDK.
-- **Deployment primitives**: local gateway state machine, `nexusd`, capability-aware fleet scheduler, NRP package metadata, containerized simulator configuration, and CI checks.
-- **Developer experience**: Rust SDK, integration SDK, CLI, specifications, examples, product website, branding system, and public project documentation.
+The built-in skills cover motion, manipulation, perception, interaction, and system behavior. They are currently simulation-validated; that label must not be upgraded to HIL or physical validation without new evidence.
 
 ## Quick start
 
-### Run the canonical simulator demo
+### Requirements
+
+- Rust stable with Cargo: [rustup.rs](https://rustup.rs/)
+- Git
+- Optional: Docker Desktop with its Linux engine enabled
+- Optional: Node.js if you want to work on [`website/`](website/)
+
+Clone the repository and enter it:
+
+```powershell
+git clone https://github.com/theworker02/Nexus-robotics-OS.git
+cd Nexus-robotics-OS
+```
+
+On macOS/Linux, the same workflow is:
+
+```bash
+git clone https://github.com/theworker02/Nexus-robotics-OS.git
+cd Nexus-robotics-OS
+```
+
+### First run
 
 ```powershell
 cargo test --workspace
-cargo run -p nexus-cli -- sim robot nxr-2
-cargo run -p nexus-cli -- task run fetch-object --no-ai
-cargo run -p nexus-cli -- goal plan Find the blue container and bring it here --no-ai
-cargo run -p nexus-cli -- goal run Find the blue container and bring it here --approve --no-ai
-cargo run -p nexus-cli -- bench simple-robot --no-ai
-cargo run -p nexus-cli -- emulate hardware --ram 1024 --cpu 2 --camera 1 --motors 2
-cargo run -p nexus-cli -- hardware validate examples/hardware/minimum-robot.nexus.toml
+cargo run -p nexus-cli-1 -- doctor
+cargo run -p nexus-cli-1 -- sim robot nxr-2
 ```
 
-The deterministic NXR-2 warehouse demo finds a blue container, performs a simulated pickup, delivers it to Station B, and creates replay events. It runs locally with no robot, account, cloud service, or language model.
+The first build downloads Rust dependencies and compiles the workspace. No robot, cloud account, language model, or external provider is required for the deterministic simulator path.
 
-### Inspect a compatibility target
+## Run the simulator
+
+The canonical NXR-2 warehouse flow finds a blue container, performs a simulated pickup, delivers it to Station B, and emits replayable events:
 
 ```powershell
-cargo run -p nexus-cli -- compatibility inspect nori-a3
-cargo run -p nexus-cli -- task run fetch-object --dry-run --no-ai
-cargo run -p nexusd
+cargo run -p nexus-cli-1 -- sim robot nxr-2
+cargo run -p nexus-cli-1 -- task run fetch-object --no-ai
+cargo run -p nexus-cli-1 -- goal plan Find the blue container and bring it here --no-ai
+cargo run -p nexus-cli-1 -- goal run Find the blue container and bring it here --approve --no-ai
+cargo run -p nexus-cli-1 -- bench simple-robot --no-ai
 ```
 
-### Run the containerized simulator
+Inspect the robot profile and deterministic capabilities:
 
 ```powershell
+cargo run -p nexus-cli-1 -- profile
+cargo run -p nexus-cli-1 -- compatibility inspect nori-a3
+cargo run -p nexus-cli-1 -- skill list
+cargo run -p nexus-cli-1 -- telemetry
+```
+
+Exercise constrained hardware planning without touching a physical actuator:
+
+```powershell
+cargo run -p nexus-cli-1 -- emulate hardware --ram 1024 --cpu 2 --camera 1 --motors 2
+cargo run -p nexus-cli-1 -- hardware validate examples/hardware/minimum-robot.nexus.toml
+cargo run -p nexus-cli-1 -- brain status
+cargo run -p nexus-cli-1 -- model recommend
+cargo run -p nexus-cli-1 -- upgrade advisor --budget 50
+```
+
+## Use the CLI
+
+Preview before execution whenever possible. `--dry-run` and `--no-ai` keep examples deterministic and local:
+
+```powershell
+# Inspect the available commands
+cargo run -p nexus-cli-1 -- --help
+cargo run -p nexus-cli-1 -- task --help
+
+# Preview a capability-driven task
+cargo run -p nexus-cli-1 -- task run fetch-object --dry-run --no-ai
+
+# Review the autonomy envelope and profile
+cargo run -p nexus-cli-1 -- autonomy envelope --no-ai
+cargo run -p nexus-cli-1 -- autonomy profile autonomous --no-ai
+
+# Produce virtual certification evidence
+cargo run -p nexus-cli-1 -- prove skill fetch-object --trials 100 --seed 483208
+cargo run -p nexus-cli-1 -- prove all --trials 100
+
+# Inspect an NRP package and launch the local gateway foundation
+cargo run -p nexus-cli-1 -- package inspect examples/packages/nexus-nori.yaml
+cargo run -p nexusd-1
+```
+
+### Rust library usage
+
+The workspace exposes focused crates for applications and adapter authors:
+
+| Crate | Role |
+| --- | --- |
+| `nexus-core-1` | Core capability, safety, and robot-domain contracts |
+| `nexus-protocol-1` | Protocol-neutral virtual hardware and device contracts |
+| `nexus-brain` | Hardware-aware intelligence profiling and planning |
+| `nexus-runtime` | Skills, safety, simulation, learning, and runtime orchestration |
+| `nexus-gateway` | Local safety-preserving gateway state machine |
+| `nexus-fleet` | Capability-aware fleet scheduling |
+| `nexus-integration-sdk` | Adapter and integration authoring contracts |
+
+`nexus-core-1` is the crates.io package name chosen to avoid a collision with an unrelated existing `nexus-core` crate. Existing Rust imports remain ergonomic through the dependency alias:
+
+```toml
+[dependencies]
+nexus-core = { package = "nexus-core-1", version = "4.2.0-rc.1" }
+```
+
+```rust
+use nexus_core::{Capability, CapabilityManifest, Health};
+```
+
+## Build and test
+
+Run the full workspace checks before opening a pull request:
+
+```powershell
+cargo fmt --all -- --check
+cargo check --workspace
+cargo test --workspace
+cargo package --workspace --allow-dirty
+```
+
+To focus on one package:
+
+```powershell
+cargo test -p nexus-runtime
+cargo test -p nexus-ros2-adapter
+cargo package -p nexus-core-1 --allow-dirty
+```
+
+Generated Rust output belongs in `target/` and is intentionally excluded from commits. Release artifacts must be produced from a clean, reviewed commit whenever possible.
+
+## Docker workflow
+
+The development compose file runs the local simulator in a hardened software-only environment:
+
+```powershell
+docker compose -f compose.dev.yml build
+
 docker compose -f compose.dev.yml run --rm nexus-simulator
 ```
 
-The compose configuration is security-hardened for local software and simulation checks. Docker Desktop’s Linux engine must be running before the image can be built or executed.
+Docker Desktop’s Linux engine must be running. This workflow validates software and simulation behavior; it does not establish HIL, vendor, or physical-robot evidence.
 
-## Platform values
+## Install published crates
 
-| Value | What it means in Nexus |
-| --- | --- |
-| Interoperability | A capability layer spans heterogeneous robots and robotics stacks. |
-| Safety | Nexus-originated physical commands pass through policy and safety enforcement. |
-| Portability | Skills declare requirements rather than assume a vendor or model. |
-| Reproducibility | Simulation, replay, manifests, packages, containers, and CI make behavior inspectable. |
-| Observability | Commands, tasks, skills, state changes, and safety decisions leave evidence. |
-| Progressive validation | Unit-tested, simulation-tested, HIL-tested, hardware-validated, and vendor-validated are distinct labels. |
-
-Read the complete [platform values](docs/product/VALUES.md).
-
-## Reliable skills
-
-Nexus v3.5 treats a skill as a behavior package with an explicit operating contract—not a function that simply emits actuator commands.
-
-Every built-in skill carries:
-
-- capability and permission requirements;
-- readiness, health, battery, and safety preconditions;
-- exclusive physical-resource requirements, such as `base` or `right_arm`;
-- maximum runtime, cancellation policy, recovery metadata, and validation lifecycle;
-- deterministic execution metadata and structured replay events.
-
-The runtime validates capability compatibility, preconditions, and resource ownership before execution. Emergency stop overrides every skill cancellation policy.
-
-| Area | Built-in skills |
-| --- | --- |
-| Motion | `stop`, `pause`, `resume`, `move_forward`, `move_backward`, `rotate`, `walk_to`, `navigate_to`, `return_home`, `dock` |
-| Manipulation | `open_gripper`, `close_gripper`, `reach`, `pick_up`, `place`, `place_object`, `handoff`, `stow_arm` |
-| Perception | `look_at`, `scan_room`, `scan_area`, `find_object`, `inspect_object`, `track_object`, `follow_target` |
-| Interaction | `speak`, `listen_for_command`, `request_assistance` |
-| System | `self_check`, `recalibrate`, `safe_shutdown` |
-
-The current skill set is **simulation-validated**. It must not be represented as HIL-tested or physical-hardware-validated. See [Reliable skills](docs/skills/reliable-skills.md) and the [Skill Reliability specification](specifications/SKILL-RELIABILITY-1.0.md).
-
-## Capability model
-
-Nexus Capability Model (NCM) describes what a robot can do and where that claim came from. NCM 2.5 also supports structured constraints, so a skill can ask for more than a boolean capability.
-
-```yaml
-capability:
-  id: manipulation.arm.right
-  version: 1
-  available: true
-properties:
-  dof: 7
-  payload_kg: 1.5
-  gripper: parallel
-quality: {}
-source:
-  type: adapter
-  integration: nori-community
-```
-
-A skill can then require, for example, a manipulator with at least six degrees of freedom or depth sensing with a minimum useful range. Nexus rejects a compatibility claim when its constraints cannot be demonstrated by the capability record.
-
-Read [NCM 2.5](specifications/NCM-2.5.md) and [NCM 2.0](specifications/NCM-2.0.md).
-
-## Safety and validation
-
-Models propose. Nexus validates. The Safety Governor remains deterministic, and no language model receives raw actuator authority. Physical execution still requires compatible adapters, configured limits, emergency-stop controls, and hardware-specific validation.
-
-Validation levels are evidence labels, not marketing claims:
-
-- **L0** Software Verified
-- **L1** Virtual Hardware Verified
-- **L2** Physics Verified
-- **L3** Adversarial Simulation Verified
-- **L4** Hardware-in-the-Loop Verified
-- **L5** Physical Robot Verified
-
-Simulation, VirtualBus, Docker, and software checks do not establish HIL or physical-robot validation.
-
-## Adaptive autonomy
-
-NIL does not bypass the runtime's existing safety boundary. It compiles a narrow set of deterministic reference objectives into transparent skill steps, checks the configured intelligence profile, and asks for approval before supervised operations or gated permissions. A profile can grant, require approval for, or prohibit navigation, perception, exploration, manipulation, object movement, door operations, and leaving the allowed zone.
+The 4.2.0-rc.1 package set is published in dependency order when registry ownership and credentials permit. The renamed core package is:
 
 ```powershell
-cargo run -p nexus-cli -- autonomy envelope --no-ai
-cargo run -p nexus-cli -- autonomy profile autonomous --no-ai
-cargo run -p nexus-cli -- goal plan Explore the permitted workspace and inspect it --no-ai
+cargo add nexus-core-1@4.2.0-rc.1
 ```
 
-The current implementation is intentionally local and simulation-first. It includes an in-memory local experience store with category-level retention policy (operator memory is disabled by default) and a compute-placement policy that keeps private work local. Voice control, remote teleoperation, mobile control surfaces, persistent user profiles, cloud execution, and direct physical-autonomy activation are not implemented by this release.
+For a direct dependency without `cargo-edit`:
 
-Read [Adaptive autonomy](docs/autonomy.md), [memory and privacy](docs/memory.md), and [automation and routines](docs/automation.md).
-
-## Nexus Brain and hardware profiles
-
-Nexus Brain scales platform features from a confirmed hardware profile rather than treating a hardware class as a permanent entitlement. `N0` through `N4` are recommendations, never a scientific measurement or a lock-in. Feature availability remains capability-based: an RGB camera can enable Basic StructureScan; depth enables Enhanced; depth plus lidar enables Advanced.
-
-```powershell
-cargo run -p nexus-cli -- profile
-cargo run -p nexus-cli -- hardware validate examples/hardware/minimum-robot.nexus.toml
-cargo run -p nexus-cli -- emulate hardware --ram 1024 --cpu 2 --camera 1 --motors 2
-cargo run -p nexus-cli -- brain status
-cargo run -p nexus-cli -- model recommend
-cargo run -p nexus-cli -- upgrade advisor --budget 50
-cargo run -p nexus-cli -- prove profile cheap-mobile-robot
+```toml
+[dependencies]
+nexus-core = { package = "nexus-core-1", version = "4.2.0-rc.1" }
+nexus-runtime = "4.2.0-rc.1"
 ```
 
-The profiler's automatic mode only detects the local host CPU architecture and logical CPU count; it clearly labels the rest as a conservative profile until an operator confirms or imports a manifest. `robot.nexus.toml` parsing and validation are implemented, but hardware probing, calibration, a GUI wizard, persistent memory, Brain discovery/pairing, encrypted synchronization, model loading, and remote execution are not yet implemented. `nexus brain serve` therefore refuses to bind a network port until an authenticated encrypted transport exists.
+Registry publication is separate from GitHub release publication. Always verify the package page and version on [crates.io](https://crates.io/) before depending on a release candidate.
 
-See [Nexus Brain](docs/nexus-brain.md), the [hardware manifest reference](docs/hardware-profiles.md), and [Nexus Brain 1.0](specifications/NEXUS-BRAIN-1.0.md).
+## Architecture
 
-The physical command boundary is deliberate:
+Nexus uses capability contracts as the seam between intent and hardware:
+
+```mermaid
+flowchart TD
+  I[Intent: goal or task] --> P[Policy and approval]
+  P --> S[Skill contract]
+  S --> C[NCM capability requirements]
+  C --> V[Safety Governor]
+  V --> R[Resource arbitration]
+  R --> A[Adapter]
+  A --> T[Target]
+  T --> E[Evidence: telemetry, replay, report]
+  E --> P
+```
+
+A physical command is never a direct language-model output:
 
 ```text
-Goal / Task → NIL policy and approval → Skill → Action proposal → Safety policy → Resource arbitration → Adapter → Robot
+Goal / Task → policy and approval → Skill → action proposal
+          → Safety policy → resource arbitration → Adapter → Robot
 ```
 
-Nexus combines applicable limits conservatively. Vendor limits may tighten a Nexus motion policy, but Nexus never relaxes vendor-declared limits automatically. Watchdogs detect stale command, adapter, telemetry, runtime, and skill heartbeats. Persistent motion is never automatically resumed after a restart; operator review is required.
+Nexus combines applicable limits conservatively. Vendor limits may tighten a Nexus motion policy, but Nexus never relaxes vendor-declared limits automatically. Persistent motion is not automatically resumed after restart; operator review is required.
 
-**Important:** simulation, VirtualBus, Docker, and software safety checks do not replace manufacturer safety limits, hardware emergency stops, mechanical guarding, operator training, or physical validation.
+## Safety and evidence
 
-See [Safety 1.0](specifications/SAFETY-1.0.md), [Gateway 1.0](specifications/GATEWAY-1.0.md), [runtime recovery](docs/recovery.md), and [hardware validation](docs/hardware-validation.md).
+Models propose. Nexus validates. No language model receives raw actuator authority. Physical execution requires a compatible adapter, configured limits, emergency-stop controls, and hardware-specific validation.
 
-## Simulation and VirtualBus
-
-NXR-1 and NXR-2 are deterministic reference robots for testable local workflows. NXR-2 models a mobile manipulator with dual arms, grippers, RGB/depth cameras, lidar, IMU, battery, audio, and a virtual servo bus.
-
-VirtualBus allows adapter and driver behavior to be exercised without hardware. It models virtual servo position, velocity, temperature, current, voltage, limits, connection state, and faults such as overtemperature, timeout, bus disconnect, and position failure.
-
-```powershell
-cargo run -p nexus-cli -- sim scenario warehouse-fetch --no-ai
-cargo run -p nexus-cli -- sim fault camera
-```
-
-Simulation is an evidence-producing development environment, not a physical validation claim. Read [Warehouse fetch](docs/simulation/warehouse-fetch.md).
-
-## Virtual certification
-
-Nexus Proving Ground makes each validation claim factual and reproducible.
-
-| Level | Meaning | Current local executor |
+| Level | Evidence label | What is required |
 | --- | --- | --- |
 | L0 | Software Verified | Runtime, schema, state-machine, and contract tests |
 | L1 | Virtual Hardware Verified | VirtualRobotBus device and fault behavior |
-| L2 | Physics Verified | Gazebo Harmonic execution evidence required |
-| L3 | Adversarially Verified | L2 plus seeded faults and randomized worlds required |
-| L4 | HIL Verified | Real controller or sensor evidence required |
-| L5 | Robot Verified | Physical robot demonstration required |
+| L2 | Physics Verified | Gazebo Harmonic execution evidence |
+| L3 | Adversarial Simulation Verified | Physics plus seeded faults and randomized worlds |
+| L4 | HIL Verified | Real controller or sensor evidence |
+| L5 | Physical Robot Verified | Physical robot demonstration and review |
 
-```powershell
-cargo run -p nexus-cli -- prove skill fetch-object --trials 100 --seed 483208
-cargo run -p nexus-cli -- prove all --trials 100
-cargo run -p nexus-cli -- prove skill door-scan --output proving-ground/reports/door-scan.md
-```
+Simulation, Docker, VirtualBus, and software tests do not establish HIL or physical-robot validation. The release documentation records unavailable external evidence as `NOT RUN` rather than silently promoting it.
 
-The local skill runner earns only the evidence it actually executes. The recorded `move_forward@2.6.0` assertion has L2 Gazebo evidence through the NXR-2 model and live ROS/Gazebo transport; the other skills remain L1 until their own physics assertions run. L3 additionally requires repeated, randomized physics trials with fault assertions. The v3.5 hardware profile check is C1 emulation only, while the Simple Robot Test is a deterministic local benchmark; neither is physics, HIL, or physical-robot certification. See [Proving Ground](docs/proving-ground.md), the [move-forward L2 certification](proving-ground/reports/move-forward-nxr2-physics-2026-08-26.md), the [recorded backend smoke](proving-ground/reports/gazebo-harmonic-backend-smoke-2026-08-26.md), and [Proving Ground 1.0](specifications/PROVING-GROUND-1.0.md).
+## Integration status
 
-## Integrations
+| Integration | Current surface | Evidence boundary |
+| --- | --- | --- |
+| NXR-2 | Deterministic simulator and profile | Local simulation |
+| Nori community | Compatibility profile and adapter contracts | Simulated; no vendor endorsement or physical validation |
+| ROS 2 | Common message/action capability mapper | Live graph transport is not validated in this release |
+| LeRobot | Episode and dataset metadata bridge | Fixture/contract surface; adapter-dependent |
+| Custom hardware | Integration SDK and capability model | Requires adapter, safety review, and external validation |
 
-Integration status is factual and intentionally conservative.
+The ROS 2 surface is a contract mapper, not a live certified ROS graph bridge. Nexus does not claim partnership, certification, or vendor support for Nori or any other hardware vendor.
 
-| Integration | Discovery | Telemetry | Skills | Simulation | Hardware status |
-| --- | --- | --- | --- | --- | --- |
-| NXR-2 | Deterministic profile | Local runtime | Built-in contracts | Yes | Not applicable |
-| Nori community | Simulated public profile | Simulated adapter | Compatibility checked | Yes | Unverified |
-| ROS 2 | Common message/action mapper | Contract surface | Capability mapping | Contract-tested | Live graph transport unvalidated |
-| LeRobot | Episode/data contracts | Dataset metadata | Bridge foundation | Fixture-tested | Varies by adapter |
-| Custom hardware | Integration SDK | Adapter-defined | Capability-driven | VirtualBus | Requires adapter and validation |
-
-### Nori Robotics reference integration
-
-**First-class community integration target: Nori Robotics.** Nexus includes a community-built compatibility layer targeting publicly documented Nori-style capabilities and workflows. It connects a Nori-style profile, Nori-Lab session interface, LeRobot-compatible data concepts, MotorLab-style read-only diagnostics, simulation, and Nexus skills through the common runtime.
-
-Nexus does not modify upstream Nori repositories and does not claim partnership, certification, vendor support, or physical Nori validation. The profile encodes only documented or explicitly configured capabilities.
-
-```powershell
-cargo run -p nexus-cli -- sim robot nori-a3
-cargo run -p nexus-cli -- compatibility inspect nori-a3
-```
-
-Read [Nori compatibility](docs/integrations/nori.md).
-
-### ROS 2
-
-The ROS 2 adapter maps common image, camera-info, IMU, battery, lidar, point-cloud, velocity-command, and joint-trajectory interfaces into discovered capabilities. It is a capability mapper and adapter contract at this release; it is not yet a live certified ROS graph bridge.
-
-Read [ROS 2 compatibility](docs/integrations/ros2.md).
-
-### LeRobot
-
-The LeRobot bridge retains episode timestamps, observations, action vectors, camera references, and metadata while reporting any lossy conversion conditions. Nexus is designed to make LeRobot workflows accessible through a shared runtime—not to replace training infrastructure.
-
-## Gateway, fleet, and packages
-
-`nexusd` is the local gateway foundation. It models the robot-side connection state machine, preserves local emergency control, buffers telemetry, and denies unsafe new operations when a central connection disappears.
-
-Fleet scheduling selects from registered robots using requirements, healthy state, battery threshold, group, connection state, and workload. It deliberately does not perform personal tracking.
-
-Nexus Robotics Packages (NRP) provide typed package metadata for skills, adapters, profiles, simulators, models, and integrations. Unsigned packages are visibly local-development-only; production mode must reject them.
-
-```powershell
-cargo run -p nexus-cli -- package inspect examples/packages/nexus-nori.yaml
-cargo run -p nexusd
-```
-
-Read [NRP 1.0](specifications/NRP-1.0.md), [Integration 1.0](specifications/INTEGRATION-1.0.md), and [Fleet scheduling](docs/fleet.md).
-
-## Developer surface
-
-| Surface | Purpose |
-| --- | --- |
-| `nexus` | Local CLI for simulation, tasks, skills, compatibility, packages, diagnostics, and telemetry. |
-| `nexusd` | Local robot gateway state-machine foundation. |
-| Rust SDK | Native local runtime access through `sim://nxr-1`. |
-| Integration SDK | Conservative adapter package scaffolding with no implicit actuator permissions. |
-| Website | Interactive product and NXR-2 capability overview in [`website/`](website/). |
-
-Useful commands:
-
-```powershell
-cargo run -p nexus-cli -- doctor
-cargo run -p nexus-cli -- skill list
-cargo run -p nexus-cli -- task run fetch-object --dry-run --no-ai
-cargo run -p nexus-cli -- telemetry
-```
-
-## Repository guide
+## Repository map
 
 ```text
-crates/          Core, runtime, protocol, gateway, and fleet libraries
+crates/          Core, runtime, protocol, gateway, brain, and fleet libraries
+apps/            CLI (`nexus`) and local gateway (`nexusd`)
 integrations/    Nori community, LeRobot, and ROS 2 adapter surfaces
-skills/          Built-in skill manifests and package documentation
 sdk/             Rust and integration SDKs
-apps/            CLI and nexusd gateway executable
-examples/        Robot, scenario, and package examples
-specifications/  Versioned contracts
-docs/            Product, architecture, integration, simulation, and safety documentation
-website/         Nexus product website
-docker/          Reproducible container build documentation
-proving-ground/  Certification scenarios, worlds, bridge configuration, and reports
+examples/        Robot, scenario, hardware, and package examples
+skills/          Built-in skill manifests and documentation
+specifications/  Versioned contracts and design specifications
+docs/            Product, integration, simulation, safety, and release docs
+website/         Product website source
+proving-ground/  Scenarios, worlds, bridge configuration, and reports
+assets/          Official Nexus brand assets
 ```
 
 ## Documentation
 
 - [Architecture](ARCHITECTURE.md)
 - [Product values](docs/product/VALUES.md)
-- [Specifications](specifications/)
-- [Simulation](docs/simulation/warehouse-fetch.md)
-- [Proving Ground](docs/proving-ground.md)
-- [Safety and validation](docs/hardware-validation.md)
-- [Contributing](CONTRIBUTING.md)
-- [Security policy](SECURITY.md)
-- [Support](SUPPORT.md)
-
-## Roadmap
-
-The current release establishes reliable local execution contracts and multi-stack integration foundations. The next milestones are expanded hardware-in-the-loop coverage, real transport implementations, cryptographic package signing, the package registry, robot-image tooling, and multi-robot orchestration.
-
-See [ROADMAP.md](ROADMAP.md) for the current plan.
-
-## Documentation and release links
-
-- [Architecture](ARCHITECTURE.md)
 - [Compatibility matrix](COMPATIBILITY.md)
+- [NCM 2.5 specification](specifications/NCM-2.5.md)
+- [Reliable skills](docs/skills/reliable-skills.md)
+- [Simulation guide](docs/simulation/warehouse-fetch.md)
+- [Proving Ground](docs/proving-ground.md)
+- [Safety and hardware validation](docs/hardware-validation.md)
+- [ROS 2 compatibility](docs/integrations/ros2.md)
+- [Nori compatibility](docs/integrations/nori.md)
 - [4.2.0-rc.1 release notes](docs/releases/v4.2.0-rc.1.md)
 - [4.2 validation report](docs/releases/4.2-validation.md)
 - [External validation plan](docs/releases/4.2-external-validation.md)
 - [Changelog](CHANGELOG.md)
 - [Roadmap](ROADMAP.md)
 - [Rust API documentation](https://docs.rs/nexus-runtime)
-- [GitHub releases](https://github.com/magnexis/nexus-robotics/releases)
-- [GitHub Pages](https://magnexis.github.io/nexus-robotics)
+- [GitHub prereleases](https://github.com/theworker02/Nexus-robotics-OS/releases)
+- [Nexus website](https://magnexis.github.io/nexus-robotics)
 
-## Citation
+## Roadmap
 
-If you use Nexus in research, cite the released version described in [CITATION.cff](CITATION.cff). Nexus does not publish a DOI until a real archival release exists.
+The current release establishes reliable local execution contracts and multi-stack integration foundations. Next milestones include expanded HIL coverage, real transport implementations, cryptographic package signing, a package registry, robot-image tooling, and multi-robot orchestration.
 
-## Funding
+See [ROADMAP.md](ROADMAP.md) for the current plan.
 
-Nexus Robotics OS development can be supported through [GitHub Sponsors](https://github.com/sponsors/theworker02). Support may help fund hardware, test equipment, HIL rigs, simulation infrastructure, CI, and documentation. See [FUNDING.md](FUNDING.md).
+## Contributing
 
-## Contributing and governance
+Contributions are especially useful in these areas:
 
-Contributions are welcome, particularly capability profiles, adapter conformance tests, reliable skill scenarios, and documentation improvements. Please read [CONTRIBUTING.md](CONTRIBUTING.md), [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md), [GOVERNANCE.md](GOVERNANCE.md), and [SECURITY.md](SECURITY.md) first.
+- capability profiles and adapter conformance tests;
+- deterministic simulation scenarios and reliable skill evidence;
+- ROS 2, LeRobot, and community integration contracts;
+- documentation, examples, and developer tooling.
 
-## License
+Please read [CONTRIBUTING.md](CONTRIBUTING.md), [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md), [GOVERNANCE.md](GOVERNANCE.md), and [SECURITY.md](SECURITY.md) before contributing. For security-sensitive issues, follow the [security policy](SECURITY.md) instead of opening a public issue.
 
-Licensed under [Apache-2.0](LICENSE).
+## Citation, funding, and license
+
+If you use Nexus in research, cite the version described in [CITATION.cff](CITATION.cff). Development can be supported through [GitHub Sponsors](https://github.com/sponsors/theworker02); see [FUNDING.md](FUNDING.md).
+
+Nexus Robotics OS is licensed under [Apache-2.0](LICENSE).

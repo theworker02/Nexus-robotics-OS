@@ -1,0 +1,104 @@
+name: Publish crates.io packages
+
+on:
+  # The prior crates.io response supplied a reset minute of :42 UTC.
+  # Running hourly at that minute lets the bot retry after the cooldown
+  # without creating an unbounded retry loop.
+  schedule:
+    - cron: "42 * * * *"
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: Type PUBLISH to authorize the crates.io upload
+        required: true
+        type: string
+      cooldown_seconds:
+        description: Seconds to wait between uploads for crates.io propagation/rate limits
+        required: false
+        default: "120"
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish workspace crates
+    if: ${{ github.event_name == 'schedule' || inputs.confirm == 'PUBLISH' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      CRATES_IO_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
+      COOLDOWN_SECONDS: ${{ inputs.cooldown_seconds || '120' }}
+    steps:
+      - name: Check out selected ref
+        uses: actions/checkout@v4
+
+      - name: Install stable Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Verify publication token
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CRATES_IO_TOKEN" || {
+            echo "CRATES_IO_TOKEN is not configured for this repository or environment." >&2
+            exit 1
+          }
+          [[ "$COOLDOWN_SECONDS" =~ ^[0-9]+$ ]] || {
+            echo "cooldown_seconds must be a non-negative integer." >&2
+            exit 1
+          }
+
+      - name: Publish dependency-ordered crates
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # Already published in the 4.2.0-rc.1 wave:
+          # nexus-core-1, nexus-protocol-1, nexus-brain, nexus-gateway-1.
+          # Do not add a previously published version here: crates.io versions
+          # are immutable and cargo publish will correctly reject duplicates.
+          packages=(
+            nexus-fleet
+            nexus-integration-sdk
+            nexus-lerobot-adapter
+            nexus-ros2-adapter
+            nexus-runtime
+            nexus-nori-adapter
+            nexusd-1
+            nexus-sdk-1
+            nexus-cli-1
+          )
+          version="4.2.0-rc.1"
+
+          for package in "${packages[@]}"; do
+            if curl --fail --silent --show-error \
+              "https://crates.io/api/v1/crates/${package}/${version}" \
+              >/dev/null; then
+              echo "${package} ${version} is already published; skipping."
+              continue
+            fi
+
+            echo "Publishing ${package} ${version}..."
+            cargo publish --locked --token "$CRATES_IO_TOKEN" -p "$package"
+            echo "${package} uploaded; waiting ${COOLDOWN_SECONDS}s for registry propagation."
+            sleep "$COOLDOWN_SECONDS"
+          done
+
+      - name: Print published package links
+        if: ${{ success() }}
+        shell: bash
+        run: |
+          cat <<'EOF'
+          Publication workflow completed. Verify each package on crates.io before using it:
+          https://crates.io/crates/nexus-fleet
+          https://crates.io/crates/nexus-integration-sdk
+          https://crates.io/crates/nexus-lerobot-adapter
+          https://crates.io/crates/nexus-ros2-adapter
+          https://crates.io/crates/nexus-runtime
+          https://crates.io/crates/nexus-nori-adapter
+          https://crates.io/crates/nexusd-1
+          https://crates.io/crates/nexus-sdk-1
+          https://crates.io/crates/nexus-cli-1
+          EOF

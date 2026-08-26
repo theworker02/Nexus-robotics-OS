@@ -6,11 +6,11 @@ version = 4
 name = "nexus-brain"
 version = "4.2.0-rc.1"
 dependencies = [
- "nexus-core",
+ "nexus-core-1",
 ]
 
 [[package]]
-name = "nexus-cli"
+name = "nexus-cli-1"
 version = "4.2.0-rc.1"
 dependencies = [
  "nexus-integration-sdk",
@@ -19,57 +19,57 @@ dependencies = [
 ]
 
 [[package]]
-name = "nexus-core"
+name = "nexus-core-1"
 version = "4.2.0-rc.1"
 
 [[package]]
 name = "nexus-fleet"
 version = "4.2.0-rc.1"
 dependencies = [
- "nexus-core",
+ "nexus-core-1",
 ]
 
 [[package]]
-name = "nexus-gateway"
+name = "nexus-gateway-1"
 version = "4.2.0-rc.1"
 dependencies = [
- "nexus-core",
+ "nexus-core-1",
 ]
 
 [[package]]
 name = "nexus-integration-sdk"
 version = "4.2.0-rc.1"
 dependencies = [
- "nexus-core",
+ "nexus-core-1",
 ]
 
 [[package]]
 name = "nexus-lerobot-adapter"
 version = "4.2.0-rc.1"
 dependencies = [
- "nexus-core",
+ "nexus-core-1",
 ]
 
 [[package]]
 name = "nexus-nori-adapter"
 version = "4.2.0-rc.1"
 dependencies = [
- "nexus-core",
- "nexus-protocol",
+ "nexus-core-1",
+ "nexus-protocol-1",
 ]
 
 [[package]]
-name = "nexus-protocol"
+name = "nexus-protocol-1"
 version = "4.2.0-rc.1"
 dependencies = [
- "nexus-core",
+ "nexus-core-1",
 ]
 
 [[package]]
 name = "nexus-ros2-adapter"
 version = "4.2.0-rc.1"
 dependencies = [
- "nexus-core",
+ "nexus-core-1",
 ]
 
 [[package]]
@@ -77,20 +77,20 @@ name = "nexus-runtime"
 version = "4.2.0-rc.1"
 dependencies = [
  "nexus-brain",
- "nexus-core",
- "nexus-protocol",
+ "nexus-core-1",
+ "nexus-protocol-1",
 ]
 
 [[package]]
-name = "nexus-sdk"
+name = "nexus-sdk-1"
 version = "4.2.0-rc.1"
 dependencies = [
  "nexus-runtime",
 ]
 
 [[package]]
-name = "nexusd"
+name = "nexusd-1"
 version = "4.2.0-rc.1"
 dependencies = [
- "nexus-gateway",
+ "nexus-gateway-1",
 ]
