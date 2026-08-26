@@ -11,4 +11,4 @@ keywords.workspace = true
 categories.workspace = true
 
 [dependencies]
-nexus-runtime = { path = "../../crates/nexus-runtime", version = "4.2.0-rc.1" }
+nexus-runtime = { path = "../../crates/nexus-runtime", version = "4.2.0-rc.2" }

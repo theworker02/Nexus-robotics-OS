@@ -37,8 +37,8 @@ jobs:
       - name: Check release-candidate metadata
         shell: bash
         run: |
-          grep -q 'version = "4.2.0-rc.1"' Cargo.toml
-          grep -q '4.2.0-rc.1' CITATION.cff
+          grep -q 'version = "4.2.0-rc.2"' Cargo.toml
+          grep -q '4.2.0-rc.2' CITATION.cff
           grep -q 'theworker02' .github/FUNDING.yml
           test -s docs/releases/v4.2.0.md
           test -s docs/releases/4.2-validation.md

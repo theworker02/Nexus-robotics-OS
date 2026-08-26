@@ -15,6 +15,6 @@ name = "nexus"
 path = "src/main.rs"
 
 [dependencies]
-nexus-runtime = { path = "../../crates/nexus-runtime", version = "4.2.0-rc.1" }
-nexus-nori-adapter = { path = "../../integrations/nori/adapter", version = "4.2.0-rc.1" }
-nexus-integration-sdk = { path = "../../sdk/integration", version = "4.2.0-rc.1" }
+nexus-runtime = { path = "../../crates/nexus-runtime", version = "4.2.0-rc.2" }
+nexus-nori-adapter = { path = "../../integrations/nori/adapter", version = "4.2.0-rc.2" }
+nexus-integration-sdk = { path = "../../sdk/integration", version = "4.2.0-rc.2" }

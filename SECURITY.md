@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-The current release candidate is **Nexus Robotics OS 4.2.0-rc.1**. This project is early-stage and support is best-effort. Release, nightly, and development builds may differ; users should identify the exact commit and version when reporting an issue.
+The current release candidate is **Nexus Robotics OS 4.2.0-rc.2**. This project is early-stage and support is best-effort. Release, nightly, and development builds may differ; users should identify the exact commit and version when reporting an issue.
 
 ## Safety boundary
 

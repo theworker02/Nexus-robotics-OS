@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/theworker02/Nexus-robotics-OS/releases/tag/v4.2.0-rc.1">
+  <a href="https://github.com/theworker02/Nexus-robotics-OS/releases/tag/v4.2.0-rc.2">
     <img src="assets/brand/github-banner.svg" alt="Nexus Robotics OS — capability-driven robotics infrastructure" width="100%" />
   </a>
 </p>
@@ -9,7 +9,7 @@
 <p align="center"><strong>Make simple robots capable. Make capable robots yours.</strong></p>
 
 <p align="center">
-  <a href="https://github.com/theworker02/Nexus-robotics-OS/releases/tag/v4.2.0-rc.1"><img src="https://img.shields.io/badge/release-4.2.0--rc.1-2878e8?style=for-the-badge" alt="Release 4.2.0 RC.1" /></a>
+  <a href="https://github.com/theworker02/Nexus-robotics-OS/releases/tag/v4.2.0-rc.2"><img src="https://img.shields.io/badge/release-4.2.0--rc.1-2878e8?style=for-the-badge" alt="Release 4.2.0 RC.1" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-101827?style=for-the-badge" alt="Apache-2.0 license" /></a>
   <a href="https://github.com/theworker02/Nexus-robotics-OS/actions"><img src="https://img.shields.io/github/actions/workflow/status/theworker02/Nexus-robotics-OS/ci.yml?style=for-the-badge&label=CI" alt="CI status" /></a>
   <a href="docs/releases/4.2-validation.md"><img src="https://img.shields.io/badge/validation-simulation--first-61a5ff?style=for-the-badge" alt="Simulation-first validation" /></a>
@@ -26,7 +26,7 @@
 
 Nexus gives applications one stable operating model while preserving the stack already in place: a simulator, ROS 2 graph, LeRobot workflow, vendor SDK, or custom adapter. Skills declare capabilities instead of robot brands. Safety remains deterministic. Evidence labels distinguish software checks from simulation, HIL, vendor, and physical-robot validation.
 
-**Current channel:** `4.2.0-rc.1` — public release candidate. This release is local- and simulation-first. It does not claim universal hardware support, live ROS 2 transport, external model-provider access, live MCP/device transport, vendor certification, HIL, or production autonomy.
+**Current channel:** `4.2.0-rc.2` — public release candidate. This release is local- and simulation-first. It does not claim universal hardware support, live ROS 2 transport, external model-provider access, live MCP/device transport, vendor certification, HIL, or production autonomy.
 
 ## Contents
 
@@ -210,12 +210,13 @@ The workspace exposes focused crates for applications and adapter authors:
 | `nexus-gateway` | Local safety-preserving gateway state machine |
 | `nexus-fleet` | Capability-aware fleet scheduling |
 | `nexus-integration-sdk` | Adapter and integration authoring contracts |
+| `nexus-robotics-os` | Official facade crate for the Nexus core/runtime surface |
 
 `nexus-core-1` is the crates.io package name chosen to avoid a collision with an unrelated existing `nexus-core` crate. Existing Rust imports remain ergonomic through the dependency alias:
 
 ```toml
 [dependencies]
-nexus-core = { package = "nexus-core-1", version = "4.2.0-rc.1" }
+nexus-core = { package = "nexus-core-1", version = "4.2.0-rc.2" }
 ```
 
 ```rust
@@ -257,18 +258,18 @@ Docker Desktop’s Linux engine must be running. This workflow validates softwar
 
 ## Install published crates
 
-The 4.2.0-rc.1 package set is published in dependency order when registry ownership and credentials permit. The renamed core package is:
+The 4.2.0-rc.2 package set is published in dependency order when registry ownership and credentials permit. The renamed core package is:
 
 ```powershell
-cargo add nexus-core-1@4.2.0-rc.1
+cargo add nexus-core-1@4.2.0-rc.2
 ```
 
 For a direct dependency without `cargo-edit`:
 
 ```toml
 [dependencies]
-nexus-core = { package = "nexus-core-1", version = "4.2.0-rc.1" }
-nexus-runtime = "4.2.0-rc.1"
+nexus-core = { package = "nexus-core-1", version = "4.2.0-rc.2" }
+nexus-runtime = "4.2.0-rc.2"
 ```
 
 Registry publication is separate from GitHub release publication. Always verify the package page and version on [crates.io](https://crates.io/) before depending on a release candidate.
@@ -354,7 +355,7 @@ assets/          Official Nexus brand assets
 - [Safety and hardware validation](docs/hardware-validation.md)
 - [ROS 2 compatibility](docs/integrations/ros2.md)
 - [Nori compatibility](docs/integrations/nori.md)
-- [4.2.0-rc.1 release notes](docs/releases/v4.2.0-rc.1.md)
+- [4.2.0-rc.2 release notes](docs/releases/v4.2.0-rc.2.md)
 - [4.2 validation report](docs/releases/4.2-validation.md)
 - [External validation plan](docs/releases/4.2-external-validation.md)
 - [Changelog](CHANGELOG.md)

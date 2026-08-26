@@ -15,4 +15,4 @@ name = "nexusd"
 path = "src/main.rs"
 
 [dependencies]
-nexus-gateway = { package = "nexus-gateway-1", path = "../../crates/nexus-gateway", version = "4.2.0-rc.1" }
+nexus-gateway = { package = "nexus-gateway-1", path = "../../crates/nexus-gateway", version = "4.2.0-rc.2" }

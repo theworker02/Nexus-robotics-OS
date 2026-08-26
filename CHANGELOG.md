@@ -2,7 +2,7 @@
 
 All notable changes are documented here. Dates are included only for releases prepared in this repository.
 
-## [4.2.0-rc.1] — 2026-08-26
+## [4.2.0-rc.2] — 2026-08-26
 
 ### Added
 
@@ -12,7 +12,7 @@ All notable changes are documented here. Dates are included only for releases pr
 
 ### Changed
 
-- Workspace and citation metadata now identify `4.2.0-rc.1`.
+- Workspace and citation metadata now identify `4.2.0-rc.2`.
 - README, roadmap, security policy, and website metadata use the Nexus Robotics OS 4.2 release-candidate identity.
 - Compatibility and validation claims are documented as evidence-based and retain `NOT RUN`/unvalidated states where applicable.
 

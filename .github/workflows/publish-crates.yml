@@ -55,11 +55,14 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Already published in the 4.2.0-rc.1 wave:
-          # nexus-core-1, nexus-protocol-1, nexus-brain, nexus-gateway-1.
-          # Do not add a previously published version here: crates.io versions
-          # are immutable and cargo publish will correctly reject duplicates.
+          # Already published in the 4.2.0-rc.2 wave: none; this workflow publishes
+          # the complete RC.2 package set in dependency order.
+          # Existing RC.1 versions are immutable and intentionally skipped.
           packages=(
+            nexus-core-1
+            nexus-protocol-1
+            nexus-brain
+            nexus-gateway-1
             nexus-fleet
             nexus-integration-sdk
             nexus-lerobot-adapter
@@ -69,8 +72,9 @@ jobs:
             nexusd-1
             nexus-sdk-1
             nexus-cli-1
+            nexus-robotics-os
           )
-          version="4.2.0-rc.1"
+          version="4.2.0-rc.2"
 
           for package in "${packages[@]}"; do
             if curl --fail --silent --show-error \
@@ -92,6 +96,10 @@ jobs:
         run: |
           cat <<'EOF'
           Publication workflow completed. Verify each package on crates.io before using it:
+          https://crates.io/crates/nexus-core-1
+          https://crates.io/crates/nexus-protocol-1
+          https://crates.io/crates/nexus-brain
+          https://crates.io/crates/nexus-gateway-1
           https://crates.io/crates/nexus-fleet
           https://crates.io/crates/nexus-integration-sdk
           https://crates.io/crates/nexus-lerobot-adapter
@@ -101,4 +109,5 @@ jobs:
           https://crates.io/crates/nexusd-1
           https://crates.io/crates/nexus-sdk-1
           https://crates.io/crates/nexus-cli-1
+          https://crates.io/crates/nexus-robotics-os
           EOF

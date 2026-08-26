@@ -6,6 +6,7 @@ members = [
   "crates/nexus-brain",
   "crates/nexus-gateway",
   "crates/nexus-fleet",
+  "packages/nexus-robotics-os",
   "apps/cli",
   "apps/nexusd",
   "sdk/rust",
@@ -17,7 +18,7 @@ members = [
 resolver = "2"
 
 [workspace.package]
-version = "4.2.0-rc.1"
+version = "4.2.0-rc.2"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/magnexis/nexus-robotics"

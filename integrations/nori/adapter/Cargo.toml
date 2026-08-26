@@ -11,5 +11,5 @@ keywords.workspace = true
 categories.workspace = true
 
 [dependencies]
-nexus-core = { package = "nexus-core-1", path = "../../../crates/nexus-core", version = "4.2.0-rc.1" }
-nexus-protocol = { package = "nexus-protocol-1", path = "../../../crates/nexus-protocol", version = "4.2.0-rc.1" }
+nexus-core = { package = "nexus-core-1", path = "../../../crates/nexus-core", version = "4.2.0-rc.2" }
+nexus-protocol = { package = "nexus-protocol-1", path = "../../../crates/nexus-protocol", version = "4.2.0-rc.2" }
