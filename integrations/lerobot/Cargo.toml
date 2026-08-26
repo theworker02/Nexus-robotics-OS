@@ -3,6 +3,12 @@ name = "nexus-lerobot-adapter"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
+description = "Loss-aware LeRobot episode bridge for Nexus Robotics OS"
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
 
 [dependencies]
-nexus-core = { path = "../../crates/nexus-core" }
+nexus-core = { path = "../../crates/nexus-core", version = "4.2.0-rc.1" }

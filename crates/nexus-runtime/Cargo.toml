@@ -3,8 +3,14 @@ name = "nexus-runtime"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
+description = "Deterministic robot runtime, skills, safety, simulation, and learning services for Nexus Robotics OS"
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
 
 [dependencies]
-nexus-core = { path = "../nexus-core" }
-nexus-protocol = { path = "../nexus-protocol" }
-nexus-brain = { path = "../nexus-brain" }
+nexus-core = { path = "../nexus-core", version = "4.2.0-rc.1" }
+nexus-protocol = { path = "../nexus-protocol", version = "4.2.0-rc.1" }
+nexus-brain = { path = "../nexus-brain", version = "4.2.0-rc.1" }

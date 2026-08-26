@@ -3,10 +3,16 @@ name = "nexusd"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
+description = "Local robot gateway executable for Nexus Robotics OS"
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
 
 [[bin]]
 name = "nexusd"
 path = "src/main.rs"
 
 [dependencies]
-nexus-gateway = { path = "../../crates/nexus-gateway" }
+nexus-gateway = { path = "../../crates/nexus-gateway", version = "4.2.0-rc.1" }

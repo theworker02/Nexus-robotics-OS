@@ -3,6 +3,12 @@ name = "nexus-sdk"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
+description = "Rust SDK for local Nexus Robotics OS runtime access"
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
 
 [dependencies]
-nexus-runtime = { path = "../../crates/nexus-runtime" }
+nexus-runtime = { path = "../../crates/nexus-runtime", version = "4.2.0-rc.1" }

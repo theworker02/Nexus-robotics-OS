@@ -17,7 +17,7 @@ Nexus Robotics OS is a Rust-first, hardware-agnostic robotics platform for skill
 
 > **Give simple robots capabilities far beyond their hardware.**
 
-Version 3.5 adds **Nexus Brain**, an adaptive hardware-intelligence layer. It profiles confirmed robot hardware, calculates a transparent Nexus Capability Index (NCI), derives feature levels and a memory budget, and recommends what should remain local, what may be delegated to a future approved Brain host, and what must stay disabled. NIL remains the policy-governed layer above skills and Safety Governor for inspectable goal plans and approval.
+Version 4.2.0-rc.1 consolidates **Nexus Brain**, adaptive hardware intelligence, deterministic skills, Model Fabric boundaries, simulation, Proving Ground evidence, and integration foundations into a public release candidate. It profiles confirmed robot hardware, calculates a transparent Nexus Capability Index (NCI), derives feature levels and a memory budget, and keeps unvalidated providers, transports, and physical autonomy explicitly disabled.
 
 Nexus does not promise that one binary runs on every robot. It provides the contracts, safety boundary, simulation tools, and integration model required to make heterogeneous robots interoperable when an adapter and capability profile exist.
 
@@ -375,13 +375,26 @@ The current release establishes reliable local execution contracts and multi-sta
 
 See [ROADMAP.md](ROADMAP.md) for the current plan.
 
+## Documentation and release links
+
+- [Architecture](ARCHITECTURE.md)
+- [Compatibility matrix](COMPATIBILITY.md)
+- [4.2.0-rc.1 release notes](docs/releases/v4.2.0-rc.1.md)
+- [4.2 validation report](docs/releases/4.2-validation.md)
+- [External validation plan](docs/releases/4.2-external-validation.md)
+- [Changelog](CHANGELOG.md)
+- [Roadmap](ROADMAP.md)
+- [Rust API documentation](https://docs.rs/nexus-runtime)
+- [GitHub releases](https://github.com/magnexis/nexus-robotics/releases)
+- [GitHub Pages](https://magnexis.github.io/nexus-robotics)
+
 ## Citation
 
 If you use Nexus in research, cite the released version described in [CITATION.cff](CITATION.cff). Nexus does not publish a DOI until a real archival release exists.
 
 ## Funding
 
-Nexus currently has no listed sponsorship account. Future funding supports robot hardware, servo systems, sensors, embedded computers, HIL rigs, simulation infrastructure, CI, and documentation. See [FUNDING.md](FUNDING.md).
+Nexus Robotics OS development can be supported through [GitHub Sponsors](https://github.com/sponsors/theworker02). Support may help fund hardware, test equipment, HIL rigs, simulation infrastructure, CI, and documentation. See [FUNDING.md](FUNDING.md).
 
 ## Contributing and governance
 

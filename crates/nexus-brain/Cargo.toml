@@ -3,7 +3,12 @@ name = "nexus-brain"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
-description = "Adaptive hardware profiling and intelligence planning for Nexus Robotics OS"
+description = "Hardware-aware intelligence profiling and planning for Nexus Robotics OS"
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
 
 [dependencies]
-nexus-core = { path = "../nexus-core" }
+nexus-core = { path = "../nexus-core", version = "4.2.0-rc.1" }

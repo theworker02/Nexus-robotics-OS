@@ -3,6 +3,12 @@ name = "nexus-core"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
+description = "Core capability, safety, and robot-domain contracts for Nexus Robotics OS"
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
 
 [lib]
 path = "src/lib.rs"

@@ -1,0 +1,17 @@
+# Rust build output
+target/
+
+# Website build and dependency output
+website/node_modules/
+website/.next/
+website/dist/
+website/.vinext/
+website/.wrangler/
+website/.openai/
+
+# Local credentials and environment files
+.env
+.env.*
+!.env.example
+*.pem
+id_rsa
