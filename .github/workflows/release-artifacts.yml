@@ -1,0 +1,127 @@
+name: Build release artifacts
+
+on:
+  push:
+    tags:
+      - "v4.2.0-rc.*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing Git tag and GitHub release to receive the artifacts
+        required: true
+        default: v4.2.0-rc.2
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build ${{ matrix.platform }} artifacts
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux-x86_64
+            runner: ubuntu-latest
+            archive: tar.gz
+          - platform: windows-x86_64
+            runner: windows-latest
+            archive: zip
+    steps:
+      - name: Check out release tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref_name }}
+          fetch-depth: 0
+
+      - name: Install stable Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build release binaries
+        run: cargo build --release -p nexus-cli-1 -p nexusd-1
+
+      - name: Assemble Linux archive
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#v}"
+          mkdir -p dist/package
+          cp target/release/nexus dist/package/nexus
+          cp target/release/nexusd dist/package/nexusd
+          chmod +x dist/package/nexus dist/package/nexusd
+          tar -czf "dist/nexus-robotics-os-${version}-linux-x86_64.tar.gz" -C dist/package nexus nexusd
+          sha256sum "dist/nexus-robotics-os-${version}-linux-x86_64.tar.gz" > "dist/nexus-robotics-os-${version}-linux-x86_64.tar.gz.sha256"
+
+      - name: Assemble Windows archive
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $version = "${{ inputs.tag || github.ref_name }}".TrimStart('v')
+          New-Item -ItemType Directory -Force -Path dist/package | Out-Null
+          Copy-Item target/release/nexus.exe dist/package/nexus.exe
+          Copy-Item target/release/nexusd.exe dist/package/nexusd.exe
+          $archive = "dist/nexus-robotics-os-$version-windows-x86_64.zip"
+          Compress-Archive -Path dist/package/nexus.exe,dist/package/nexusd.exe -DestinationPath $archive -Force
+          $hash = (Get-FileHash $archive -Algorithm SHA256).Hash.ToLower()
+          "$hash  $(Split-Path $archive -Leaf)" | Set-Content "$archive.sha256"
+
+      - name: Upload build archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.platform }}
+          path: dist/*.tar.gz*
+          if-no-files-found: ignore
+
+      - name: Upload Windows archive
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.platform }}-zip
+          path: dist/*.zip*
+          if-no-files-found: error
+
+  publish:
+    name: Upload assets to GitHub release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build archives
+        uses: actions/download-artifact@v4
+        with:
+          pattern: release-*
+          path: dist
+          merge-multiple: true
+
+      - name: Create checksums and release manifest
+        shell: bash
+        env:
+          TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          set -euo pipefail
+          version="${TAG#v}"
+          find dist -maxdepth 1 -type f \( -name '*.tar.gz' -o -name '*.zip' \) -print0 | xargs -0 sha256sum > dist/SHA256SUMS.txt
+          cat > dist/release-manifest.json <<EOF
+          {
+            "product": "Nexus Robotics OS",
+            "version": "${version}",
+            "tag": "${TAG}",
+            "commit": "${GITHUB_SHA}",
+            "artifacts": [
+              "nexus-robotics-os-${version}-linux-x86_64.tar.gz",
+              "nexus-robotics-os-${version}-windows-x86_64.zip"
+            ],
+            "validation": "Release binaries are software artifacts; HIL, vendor, and physical-robot validation remain separate evidence gates."
+          }
+          EOF
+
+      - name: Upload release assets
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          set -euo pipefail
+          gh release upload "$TAG" dist/* --repo "$GITHUB_REPOSITORY" --clobber
