@@ -1,0 +1,11 @@
+[runtime]
+log_level = "info"
+
+[planner]
+provider = "rule"
+
+[simulation]
+backend = "nexus-deterministic"
+
+[safety]
+max_speed = 0.8

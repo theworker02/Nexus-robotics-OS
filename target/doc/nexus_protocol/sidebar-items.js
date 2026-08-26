@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["BusError","VirtualFault","VirtualRobotFault","VirtualServoFaultState"],"struct":["VirtualBus","VirtualCamera","VirtualImu","VirtualLidar","VirtualMicrophone","VirtualServo"],"type":["VirtualRobotBus"]};

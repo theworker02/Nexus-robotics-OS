@@ -1,0 +1,4 @@
+name: look_at
+version: 0.5.0
+requires: [vision.rgb]
+permissions: [camera.read]

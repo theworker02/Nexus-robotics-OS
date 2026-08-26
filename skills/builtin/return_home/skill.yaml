@@ -1,0 +1,4 @@
+name: return_home
+version: 0.5.0
+requires: [locomotion.control]
+permissions: [locomotion.control]

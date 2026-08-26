@@ -1,0 +1,11 @@
+FROM osrf/ros:jazzy-desktop
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ros-jazzy-ros-gz \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY worlds /opt/nexus/worlds
+COPY bridge /opt/nexus/bridge
+COPY controller /opt/nexus/controller
+
+USER 65532:65532

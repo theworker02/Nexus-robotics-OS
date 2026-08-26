@@ -1,0 +1,13 @@
+name: warehouse-fetch
+robot:
+  profile: nxr-2
+objects:
+  blue_container:
+    location: loading_bay
+goal:
+  task: fetch-object
+  destination: station_b
+assert:
+  object_held: false
+  robot_zone: station_b
+  safety_events: 0

@@ -1,0 +1,35 @@
+services:
+  nexus-runtime:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    command: ["doctor"]
+    read_only: true
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+  nexus-simulator:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    command: ["sim", "scenario", "warehouse-fetch", "--no-ai"]
+    read_only: true
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+  nexus-nori-adapter:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    command: ["compatibility", "inspect", "nori-a3"]
+    profiles: ["nori"]
+    read_only: true
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+  skill-test:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    command: ["task", "run", "fetch-object", "--dry-run", "--no-ai"]
+    profiles: ["test"]
+    read_only: true
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]

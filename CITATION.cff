@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+message: "If you use Nexus Robotics OS, please cite it."
+title: "Nexus Robotics OS"
+authors:
+  - name: "Magnexis"
+version: 4.2.0-rc.1
+license: Apache-2.0
+repository-code: "https://github.com/magnexis/nexus-robotics"

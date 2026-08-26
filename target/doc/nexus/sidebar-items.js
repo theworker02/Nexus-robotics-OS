@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["fail","main","option","print_brain_plan","print_envelope","print_goal_plan","print_hardware_profile","print_model_recommendations","usage"]};

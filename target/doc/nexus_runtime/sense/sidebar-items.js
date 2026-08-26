@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["EnvironmentCondition","InformationType","SenseError"],"fn":["nxr2_senses"],"struct":["SenseHistoryEntry","SensePlan","SenseProvider","SenseRouter"]};

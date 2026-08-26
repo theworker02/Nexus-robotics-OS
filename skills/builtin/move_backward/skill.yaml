@@ -1,0 +1,4 @@
+name: move_backward
+version: 0.5.0
+requires: [locomotion.control]
+permissions: [locomotion.control]

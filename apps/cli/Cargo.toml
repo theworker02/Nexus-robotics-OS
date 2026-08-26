@@ -1,0 +1,14 @@
+[package]
+name = "nexus-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "nexus"
+path = "src/main.rs"
+
+[dependencies]
+nexus-runtime = { path = "../../crates/nexus-runtime" }
+nexus-nori-adapter = { path = "../../integrations/nori/adapter" }
+nexus-integration-sdk = { path = "../../sdk/integration" }

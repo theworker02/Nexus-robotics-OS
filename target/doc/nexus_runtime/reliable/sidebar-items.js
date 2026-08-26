@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["CancellationPolicy","ContractError","Determinism","ResourceError","SkillLifecycle"],"fn":["builtin_contract"],"struct":["ResourceArbiter","SkillContract"]};

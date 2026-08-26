@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["DoorState","MaterialCategory","StructureChange","StructureKind"],"struct":["DoorModel","MaterialEstimate","StructureDiff","StructureModel","StructureSurface"]};

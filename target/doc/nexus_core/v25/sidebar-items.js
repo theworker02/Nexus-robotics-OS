@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["CapabilityValue","ConstraintFailure"],"struct":["CapabilityConstraint","SemanticCapability"]};

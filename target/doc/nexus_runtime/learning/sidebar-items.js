@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["FailureCategory","LearningError","LearningStage"],"fn":["doorway_learning_session","run_doorway_learning"],"struct":["LearningArtifact","LearningAttempt","LearningBudget","LearningSession","SkillImprovementProposal"]};

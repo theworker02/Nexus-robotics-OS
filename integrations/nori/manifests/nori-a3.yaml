@@ -1,0 +1,13 @@
+robot:
+  id: nori-a3-sim
+  vendor: nori
+  model: A3
+  compatibility: community-simulated
+capabilities:
+  manipulators:
+    left: { dof: 8, gripper: true }
+    right: { dof: 8, gripper: true }
+  vision: { rgb_cameras: 4 }
+  ranging: { lidar: true }
+  audio: { microphone: true, speaker: true }
+  power: { battery: true }

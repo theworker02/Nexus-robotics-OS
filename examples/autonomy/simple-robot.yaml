@@ -1,0 +1,13 @@
+name: simple-robot
+version: 1
+profile: autonomous
+validation: local-functional-benchmark
+goals:
+  - Explore the permitted workspace and inspect it
+  - Find the blue container and bring it here
+assertions:
+  - local_task_memory_recorded
+  - local_skill_memory_recorded
+  - safety_violations: 0
+limitations:
+  - This example is not L2 physics, L3 adversarial, L4 HIL, or L5 robot evidence.

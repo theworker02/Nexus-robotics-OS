@@ -1,0 +1,4 @@
+name: speak
+version: 0.5.0
+requires: [audio.speakers]
+permissions: [speaker.write]

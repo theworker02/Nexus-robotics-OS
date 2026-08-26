@@ -1,0 +1,9 @@
+name: Robot integration
+description: Propose a capability-first adapter
+body:
+  - type: input
+    attributes: { label: Vendor and robot }
+  - type: textarea
+    attributes: { label: Capability manifest, description: Include known capabilities and their source. }
+  - type: textarea
+    attributes: { label: Safety limits and validation level }

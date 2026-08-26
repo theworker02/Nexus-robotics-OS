@@ -1,0 +1,13 @@
+name: DemoBot
+runtime:
+  adapter: simulator
+joints:
+  left_shoulder:
+    type: revolute
+    min_deg: -90
+    max_deg: 120
+sensors:
+  front_camera:
+    type: rgbd
+  imu:
+    type: imu

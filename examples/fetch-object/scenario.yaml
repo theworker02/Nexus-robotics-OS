@@ -1,0 +1,13 @@
+name: fetch_cube
+robot:
+  start: home
+objects:
+  red_cube:
+    location: table
+goal:
+  skill: pick_up
+  object: red_cube
+assert:
+  object_held: false
+  robot_zone: home
+  safety_events: 0

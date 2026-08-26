@@ -1,0 +1,291 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `apps\cli\src\main.rs`."><title>main.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../static.files/rustdoc-17e0aaed.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="nexus" data-themes="" data-resource-suffix="" data-rustdoc-version="1.96.0 (ac68faa20 2026-05-25)" data-channel="1.96.0" data-search-js="search-b5634cc7.js" data-stringdex-js="stringdex-2da4960a.js" data-settings-js="settings-170eb4bf.js" ><script src="../../static.files/storage-41dd4d93.js"></script><script defer src="../../static.files/src-script-813739b1.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5013f961.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-f7c3ffd8.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><a class="skip-main-content" href="#main-content">Skip to main content</a><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><section id="main-content" class="content" tabindex="-1"><div class="main-heading"><h1><div class="sub-heading">nexus/</div>main.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">use </span>nexus_integration_sdk::scaffold;
+<a href=#2 id=2 data-nosnippet>2</a><span class="kw">use </span>nexus_nori_adapter::nori_a3_manifest;
+<a href=#3 id=3 data-nosnippet>3</a><span class="kw">use </span>nexus_runtime::{
+<a href=#4 id=4 data-nosnippet>4</a>    doorway_learning_session, upgrade_advisor, AdaptiveRuntimePlanner, CapabilityIndex,
+<a href=#5 id=5 data-nosnippet>5</a>    EnvironmentCondition, HardwareProfile, InformationType, IntelligenceProfile, PackageManifest,
+<a href=#6 id=6 data-nosnippet>6</a>    ProvingGround, Runtime,
+<a href=#7 id=7 data-nosnippet>7</a>};
+<a href=#8 id=8 data-nosnippet>8</a>
+<a href=#9 id=9 data-nosnippet>9</a><span class="kw">fn </span>usage() {
+<a href=#10 id=10 data-nosnippet>10</a>    <span class="macro">println!</span>(<span class="string">"Nexus Robotics OS v3.0 — Adaptive Autonomy\n\nCore: nexus demo | dev | doctor | telemetry\nRobot: nexus robot list|inspect|diagnose [nxr-1|nxr-2]\nGoal: nexus goal plan &lt;objective&gt; | run &lt;objective&gt; [--approve]\nAutonomy: nexus autonomy envelope | profile &lt;manual|assisted|supervised|autonomous&gt;\nBench: nexus bench simple-robot\nTask: nexus task run fetch-object | --skill &lt;name&gt; [--target &lt;name&gt;] [--dry-run]\nSkill: nexus skill list|test &lt;name&gt;|install &lt;skill.yaml&gt;\nSimulation: nexus sim robot nxr-2|nori-a3 | scenario fetch_cube|warehouse-fetch|doorway-learning|simple-robot-test | fault &lt;camera|joint|low-battery|network&gt;\nProving Ground: nexus prove skill &lt;fetch-object|sense-hopping|door-scan|doorway-learning&gt; [--trials 100] [--seed 483208] [--output report.md] | all\nSense: nexus sense list | plan &lt;obstacle-distance|spatial-geometry|door-geometry&gt;\nStructure: nexus structure scan | diff\nLearn: nexus learn create | start | status\nCompatibility: nexus compatibility inspect nori-a3\nPackages: nexus package validate|inspect &lt;package.yaml&gt;\nIntegration: nexus integration create --name &lt;name&gt; [--transport serial]\n\nNXR-2 and Nori profiles are simulated. Add --no-ai for deterministic planning."</span>);
+<a href=#11 id=11 data-nosnippet>11</a>}
+<a href=#12 id=12 data-nosnippet>12</a><span class="kw">fn </span>main() {
+<a href=#13 id=13 data-nosnippet>13</a>    <span class="kw">let </span>args: Vec&lt;String&gt; = std::env::args()
+<a href=#14 id=14 data-nosnippet>14</a>        .skip(<span class="number">1</span>)
+<a href=#15 id=15 data-nosnippet>15</a>        .filter(|value| value != <span class="string">"--no-ai"</span>)
+<a href=#16 id=16 data-nosnippet>16</a>        .collect();
+<a href=#17 id=17 data-nosnippet>17</a>    <span class="kw">let </span>command: Vec&lt;<span class="kw-2">&amp;</span>str&gt; = args.iter().map(String::as_str).collect();
+<a href=#18 id=18 data-nosnippet>18</a>    <span class="kw">let </span><span class="kw-2">mut </span>runtime = <span class="kw">if </span>args.iter().any(|value| {
+<a href=#19 id=19 data-nosnippet>19</a>        value == <span class="string">"nxr-2"
+<a href=#20 id=20 data-nosnippet>20</a>            </span>|| value == <span class="string">"nori-a3"
+<a href=#21 id=21 data-nosnippet>21</a>            </span>|| value == <span class="string">"warehouse-fetch"
+<a href=#22 id=22 data-nosnippet>22</a>            </span>|| value == <span class="string">"fetch-object"
+<a href=#23 id=23 data-nosnippet>23</a>            </span>|| value == <span class="string">"goal"
+<a href=#24 id=24 data-nosnippet>24</a>            </span>|| value == <span class="string">"autonomy"
+<a href=#25 id=25 data-nosnippet>25</a>            </span>|| value == <span class="string">"bench"
+<a href=#26 id=26 data-nosnippet>26</a>            </span>|| value == <span class="string">"profile"
+<a href=#27 id=27 data-nosnippet>27</a>            </span>|| value == <span class="string">"hardware"
+<a href=#28 id=28 data-nosnippet>28</a>            </span>|| value == <span class="string">"emulate"
+<a href=#29 id=29 data-nosnippet>29</a>            </span>|| value == <span class="string">"brain"
+<a href=#30 id=30 data-nosnippet>30</a>            </span>|| value == <span class="string">"model"
+<a href=#31 id=31 data-nosnippet>31</a>            </span>|| value == <span class="string">"upgrade"
+<a href=#32 id=32 data-nosnippet>32</a>            </span>|| value == <span class="string">"simple-robot-test"
+<a href=#33 id=33 data-nosnippet>33</a>    </span>}) {
+<a href=#34 id=34 data-nosnippet>34</a>        Runtime::nxr2()
+<a href=#35 id=35 data-nosnippet>35</a>    } <span class="kw">else </span>{
+<a href=#36 id=36 data-nosnippet>36</a>        Runtime::nxr1()
+<a href=#37 id=37 data-nosnippet>37</a>    };
+<a href=#38 id=38 data-nosnippet>38</a>    <span class="kw">match </span>command.as_slice() {
+<a href=#39 id=39 data-nosnippet>39</a>        [] =&gt; usage(),
+<a href=#40 id=40 data-nosnippet>40</a>        [cmd] <span class="kw">if </span><span class="kw-2">*</span>cmd == <span class="string">"help" </span>|| <span class="kw-2">*</span>cmd == <span class="string">"--help" </span>=&gt; usage(),
+<a href=#41 id=41 data-nosnippet>41</a>        [cmd] <span class="kw">if </span><span class="kw-2">*</span>cmd == <span class="string">"demo" </span>|| <span class="kw-2">*</span>cmd == <span class="string">"dev" </span>=&gt; <span class="kw">match </span>runtime.run_warehouse_fetch_demo() { <span class="prelude-val">Ok</span>(summary) =&gt; <span class="macro">println!</span>(<span class="string">"Nexus Runtime READY\nSimulator READY\nNXR-2 CONNECTED\n{summary}\nReplay entries: {}"</span>, runtime.replays.values().map(|replay| replay.entries.len()).sum::&lt;usize&gt;()), <span class="prelude-val">Err</span>(error) =&gt; fail(error), },
+<a href=#42 id=42 data-nosnippet>42</a>        [<span class="string">"robot"</span>, <span class="string">"list"</span>, ..] =&gt; <span class="macro">println!</span>(<span class="string">"{}\t{}\t{:?}\t{:.0}%"</span>, runtime.robot.identity, runtime.robot.capabilities.name, runtime.robot.health, runtime.robot.battery_percent),
+<a href=#43 id=43 data-nosnippet>43</a>        [<span class="string">"robot"</span>, <span class="string">"inspect"</span>, ..] =&gt; { <span class="macro">println!</span>(<span class="string">"{} ({})\nSafety: {}\nCapabilities:"</span>, runtime.robot.capabilities.name, runtime.robot.identity, runtime.robot.safety_state.label()); <span class="kw">for </span>capability <span class="kw">in </span><span class="kw-2">&amp;</span>runtime.robot.capabilities.capabilities { <span class="macro">println!</span>(<span class="string">"- {}"</span>, capability.<span class="number">0</span>); } },
+<a href=#44 id=44 data-nosnippet>44</a>        [<span class="string">"robot"</span>, <span class="string">"diagnose"</span>, ..] =&gt; <span class="macro">println!</span>(<span class="string">"joints: {} virtual servos\nsensors: {:?}\nnetwork: {}\nbattery: {:.0}%\nskills: {} enabled\nsafety: {}"</span>, runtime.virtual_bus.discover_servos().len(), runtime.robot.sensors, runtime.robot.network_connected, runtime.robot.battery_percent, runtime.skills.list().count(), runtime.robot.safety_state.label()),
+<a href=#45 id=45 data-nosnippet>45</a>        [<span class="string">"profile"</span>, ..] =&gt; print_hardware_profile(<span class="kw-2">&amp;</span>HardwareProfile::discovered_host()),
+<a href=#46 id=46 data-nosnippet>46</a>        [<span class="string">"hardware"</span>, <span class="string">"validate"</span>, path] =&gt; <span class="kw">match </span>std::fs::read_to_string(path)
+<a href=#47 id=47 data-nosnippet>47</a>            .map_err(|error| error.to_string())
+<a href=#48 id=48 data-nosnippet>48</a>            .and_then(|content| HardwareProfile::from_manifest(<span class="kw-2">&amp;</span>content)) {
+<a href=#49 id=49 data-nosnippet>49</a>                <span class="prelude-val">Ok</span>(profile) =&gt; {
+<a href=#50 id=50 data-nosnippet>50</a>                    print_hardware_profile(<span class="kw-2">&amp;</span>profile);
+<a href=#51 id=51 data-nosnippet>51</a>                    <span class="kw">let </span>warnings = profile.validation_warnings();
+<a href=#52 id=52 data-nosnippet>52</a>                    <span class="kw">if </span>warnings.is_empty() {
+<a href=#53 id=53 data-nosnippet>53</a>                        <span class="macro">println!</span>(<span class="string">"Hardware manifest: PASS"</span>);
+<a href=#54 id=54 data-nosnippet>54</a>                    } <span class="kw">else </span>{
+<a href=#55 id=55 data-nosnippet>55</a>                        <span class="macro">println!</span>(<span class="string">"Hardware manifest: WARN"</span>);
+<a href=#56 id=56 data-nosnippet>56</a>                        <span class="kw">for </span>warning <span class="kw">in </span>warnings { <span class="macro">println!</span>(<span class="string">"- {warning}"</span>); }
+<a href=#57 id=57 data-nosnippet>57</a>                    }
+<a href=#58 id=58 data-nosnippet>58</a>                }
+<a href=#59 id=59 data-nosnippet>59</a>                <span class="prelude-val">Err</span>(error) =&gt; <span class="macro">eprintln!</span>(<span class="string">"hardware manifest invalid: {error}"</span>),
+<a href=#60 id=60 data-nosnippet>60</a>            },
+<a href=#61 id=61 data-nosnippet>61</a>        [<span class="string">"emulate"</span>, <span class="string">"hardware"</span>, rest @ ..] =&gt; {
+<a href=#62 id=62 data-nosnippet>62</a>            <span class="kw">let </span><span class="kw-2">mut </span>profile = HardwareProfile::minimum_robot();
+<a href=#63 id=63 data-nosnippet>63</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = option(rest, <span class="string">"--ram"</span>).and_then(|value| value.parse().ok()) { profile.ram_mb = value; }
+<a href=#64 id=64 data-nosnippet>64</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = option(rest, <span class="string">"--cpu"</span>).and_then(|value| value.parse().ok()) { profile.cpu_cores = value; }
+<a href=#65 id=65 data-nosnippet>65</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = option(rest, <span class="string">"--camera"</span>).and_then(|value| value.parse().ok()) { profile.rgb_cameras = value; }
+<a href=#66 id=66 data-nosnippet>66</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = option(rest, <span class="string">"--motors"</span>).and_then(|value| value.parse().ok()) { profile.motors = value; }
+<a href=#67 id=67 data-nosnippet>67</a>            profile.name = <span class="string">"Emulated hardware profile"</span>.into();
+<a href=#68 id=68 data-nosnippet>68</a>            <span class="macro">println!</span>(<span class="string">"HARDWARE EMULATION\nNo physical device or adapter was contacted."</span>);
+<a href=#69 id=69 data-nosnippet>69</a>            print_hardware_profile(<span class="kw-2">&amp;</span>profile);
+<a href=#70 id=70 data-nosnippet>70</a>        },
+<a href=#71 id=71 data-nosnippet>71</a>        [<span class="string">"brain"</span>, <span class="string">"status"</span>, ..] =&gt; print_brain_plan(<span class="kw-2">&amp;</span>runtime.hardware_profile, <span class="kw-2">&amp;</span>runtime.brain_plan),
+<a href=#72 id=72 data-nosnippet>72</a>        [<span class="string">"brain"</span>, <span class="string">"serve"</span>, ..] =&gt; <span class="macro">eprintln!</span>(<span class="string">"Nexus Brain network serving is not implemented: authenticated pairing, mutual keys, and encrypted transport are required before a host can bind a network port."</span>),
+<a href=#73 id=73 data-nosnippet>73</a>        [<span class="string">"model"</span>, <span class="string">"recommend"</span>, ..] =&gt; print_model_recommendations(<span class="kw-2">&amp;</span>runtime.hardware_profile),
+<a href=#74 id=74 data-nosnippet>74</a>        [<span class="string">"upgrade"</span>, <span class="string">"advisor"</span>, rest @ ..] =&gt; {
+<a href=#75 id=75 data-nosnippet>75</a>            <span class="kw">let </span>budget = option(rest, <span class="string">"--budget"</span>).and_then(|value| value.parse().ok());
+<a href=#76 id=76 data-nosnippet>76</a>            <span class="kw">let </span>recommendations = upgrade_advisor(<span class="kw-2">&amp;</span>runtime.hardware_profile, budget);
+<a href=#77 id=77 data-nosnippet>77</a>            <span class="macro">println!</span>(<span class="string">"Upgrade advisor: {}"</span>, runtime.brain_plan.class.label());
+<a href=#78 id=78 data-nosnippet>78</a>            <span class="kw">if </span>recommendations.is_empty() { <span class="macro">println!</span>(<span class="string">"No compatible recommendations within the supplied budget."</span>); }
+<a href=#79 id=79 data-nosnippet>79</a>            <span class="kw">for </span>recommendation <span class="kw">in </span>recommendations { <span class="macro">println!</span>(<span class="string">"{}. {} (${})\n   {}"</span>, recommendation.priority, recommendation.title, recommendation.indicative_cost_usd, recommendation.benefit); }
+<a href=#80 id=80 data-nosnippet>80</a>        },
+<a href=#81 id=81 data-nosnippet>81</a>        [<span class="string">"skill"</span>, <span class="string">"list"</span>, ..] =&gt; <span class="kw">for </span>skill <span class="kw">in </span>runtime.skills.list() { <span class="kw">let </span>result = runtime.skills.compatibility(<span class="kw-2">&amp;</span>skill.name, <span class="kw-2">&amp;</span>runtime.robot.capabilities).expect(<span class="string">"bundled skill exists"</span>); <span class="macro">println!</span>(<span class="string">"{}\t{}\t{}"</span>, skill.name, skill.version, <span class="kw">if </span>result.compatible { <span class="string">"SIMULATED" </span>} <span class="kw">else </span>{ <span class="string">"INCOMPATIBLE" </span>}); },
+<a href=#82 id=82 data-nosnippet>82</a>        [<span class="string">"skill"</span>, <span class="string">"test"</span>, skill] =&gt; <span class="kw">match </span>runtime.run_skill(skill, <span class="prelude-val">Some</span>(<span class="string">"blue_container"</span>)) { <span class="prelude-val">Ok</span>(()) =&gt; <span class="macro">println!</span>(<span class="string">"skill test PASS: {skill} on {}"</span>, runtime.robot.identity), <span class="prelude-val">Err</span>(error) =&gt; fail(error) },
+<a href=#83 id=83 data-nosnippet>83</a>        [<span class="string">"skill"</span>, <span class="string">"install"</span>, path] =&gt; <span class="kw">match </span>std::fs::read_to_string(path).ok().and_then(|yaml| runtime.skills.install_local_manifest(<span class="kw-2">&amp;</span>yaml).ok()) { <span class="prelude-val">Some</span>(name) =&gt; <span class="macro">println!</span>(<span class="string">"installed local development skill: {name}"</span>), <span class="prelude-val">None </span>=&gt; <span class="macro">eprintln!</span>(<span class="string">"unable to install: expected a readable skill.yaml with a name"</span>), },
+<a href=#84 id=84 data-nosnippet>84</a>        [<span class="string">"task"</span>, <span class="string">"run"</span>, task, rest @ ..] <span class="kw">if </span><span class="kw-2">*</span>task == <span class="string">"fetch-object" </span>=&gt; { <span class="kw">if </span>rest.iter().any(|value| <span class="kw-2">*</span>value == <span class="string">"--dry-run"</span>) { <span class="macro">println!</span>(<span class="string">"DRY RUN PASS\nCapabilities: compatible\nSkills: inspect_object, walk_to, pick_up, place_object\nSafety: effective policy valid\nNo commands dispatched."</span>); } <span class="kw">else </span>{ <span class="kw">match </span>runtime.run_warehouse_fetch_demo() { <span class="prelude-val">Ok</span>(summary) =&gt; <span class="macro">println!</span>(<span class="string">"task completed: {summary}"</span>), <span class="prelude-val">Err</span>(error) =&gt; fail(error), } } },
+<a href=#85 id=85 data-nosnippet>85</a>        [<span class="string">"task"</span>, <span class="string">"run"</span>, rest @ ..] =&gt; { <span class="kw">let </span>skill = option(rest, <span class="string">"--skill"</span>).unwrap_or(<span class="string">"walk_to"</span>); <span class="kw">let </span>target = option(rest, <span class="string">"--target"</span>); <span class="kw">if </span>rest.iter().any(|value| <span class="kw-2">*</span>value == <span class="string">"--dry-run"</span>) { <span class="kw">match </span>runtime.skills.compatibility(skill, <span class="kw-2">&amp;</span>runtime.robot.capabilities) { <span class="prelude-val">Ok</span>(result) <span class="kw">if </span>result.compatible =&gt; <span class="macro">println!</span>(<span class="string">"DRY RUN PASS: {skill}; safety and capability checks passed; no commands dispatched."</span>), <span class="prelude-val">Ok</span>(result) =&gt; <span class="macro">println!</span>(<span class="string">"DRY RUN FAILED: missing {}"</span>, result.missing.join(<span class="string">", "</span>)), <span class="prelude-val">Err</span>(error) =&gt; fail(error), } } <span class="kw">else </span>{ <span class="kw">match </span>runtime.run_skill(skill, target) { <span class="prelude-val">Ok</span>(()) =&gt; <span class="macro">println!</span>(<span class="string">"task completed: {skill}"</span>), <span class="prelude-val">Err</span>(error) =&gt; fail(error), } } },
+<a href=#86 id=86 data-nosnippet>86</a>        [<span class="string">"sim"</span>, <span class="string">"robot"</span>, profile] <span class="kw">if </span><span class="kw-2">*</span>profile == <span class="string">"nxr-2" </span>=&gt; <span class="macro">println!</span>(<span class="string">"NXR-2 CONNECTED\nSIMULATED mobile-manipulator profile\nVirtualBus: {} servos, {} camera streams"</span>, runtime.virtual_bus.discover_servos().len(), runtime.virtual_bus.camera_streams),
+<a href=#87 id=87 data-nosnippet>87</a>        [<span class="string">"sim"</span>, <span class="string">"robot"</span>, profile] <span class="kw">if </span><span class="kw-2">*</span>profile == <span class="string">"nori-a3" </span>=&gt; <span class="macro">println!</span>(<span class="string">"SIMULATED Nori-compatible profile CONNECTED\nCommunity Integration — not official hardware validation\nCapabilities: {}"</span>, nori_a3_manifest().records.len()),
+<a href=#88 id=88 data-nosnippet>88</a>        [<span class="string">"sim"</span>, <span class="string">"scenario"</span>, scenario] <span class="kw">if </span><span class="kw-2">*</span>scenario == <span class="string">"fetch_cube" </span>=&gt; { <span class="kw">let </span><span class="kw-2">mut </span>legacy = Runtime::nxr1(); <span class="kw">match </span>legacy.run_fetch_cube_demo() { <span class="prelude-val">Ok</span>(result) =&gt; <span class="macro">println!</span>(<span class="string">"scenario fetch_cube: {result}"</span>), <span class="prelude-val">Err</span>(error) =&gt; fail(error), } },
+<a href=#89 id=89 data-nosnippet>89</a>        [<span class="string">"sim"</span>, <span class="string">"scenario"</span>, scenario] <span class="kw">if </span><span class="kw-2">*</span>scenario == <span class="string">"warehouse-fetch" </span>=&gt; <span class="kw">match </span>runtime.run_warehouse_fetch_demo() { <span class="prelude-val">Ok</span>(result) =&gt; <span class="macro">println!</span>(<span class="string">"scenario warehouse-fetch: {result}"</span>), <span class="prelude-val">Err</span>(error) =&gt; fail(error), },
+<a href=#90 id=90 data-nosnippet>90</a>        [<span class="string">"sim"</span>, <span class="string">"scenario"</span>, scenario] <span class="kw">if </span><span class="kw-2">*</span>scenario == <span class="string">"doorway-learning" </span>=&gt; <span class="kw">match </span>runtime.run_unfamiliar_door_challenge() { <span class="prelude-val">Ok</span>(result) =&gt; <span class="macro">println!</span>(<span class="string">"scenario doorway-learning: {result}"</span>), <span class="prelude-val">Err</span>(error) =&gt; fail(error), },
+<a href=#91 id=91 data-nosnippet>91</a>        [<span class="string">"sim"</span>, <span class="string">"scenario"</span>, scenario] <span class="kw">if </span><span class="kw-2">*</span>scenario == <span class="string">"simple-robot-test" </span>=&gt; <span class="kw">match </span>runtime.run_simple_robot_test() { <span class="prelude-val">Ok</span>(result) =&gt; <span class="macro">println!</span>(<span class="string">"scenario simple-robot-test: {result}"</span>), <span class="prelude-val">Err</span>(error) =&gt; fail(error), },
+<a href=#92 id=92 data-nosnippet>92</a>        [<span class="string">"sim"</span>, <span class="string">"fault"</span>, fault] =&gt; { runtime.inject_fault(fault); <span class="macro">println!</span>(<span class="string">"fault injected: {fault}; health={:?}"</span>, runtime.robot.health); },
+<a href=#93 id=93 data-nosnippet>93</a>        [<span class="string">"goal"</span>, <span class="string">"plan"</span>, request @ ..] <span class="kw">if </span>!request.is_empty() =&gt; {
+<a href=#94 id=94 data-nosnippet>94</a>            <span class="kw">let </span>request = request.join(<span class="string">" "</span>);
+<a href=#95 id=95 data-nosnippet>95</a>            print_goal_plan(<span class="kw-2">&amp;</span>runtime.preview_goal(<span class="kw-2">&amp;</span>request));
+<a href=#96 id=96 data-nosnippet>96</a>        },
+<a href=#97 id=97 data-nosnippet>97</a>        [<span class="string">"goal"</span>, <span class="string">"run"</span>, request @ ..] <span class="kw">if </span>!request.is_empty() =&gt; {
+<a href=#98 id=98 data-nosnippet>98</a>            <span class="kw">let </span>approved = request.iter().any(|value| <span class="kw-2">*</span>value == <span class="string">"--approve"</span>);
+<a href=#99 id=99 data-nosnippet>99</a>            <span class="kw">let </span>request = request
+<a href=#100 id=100 data-nosnippet>100</a>                .iter()
+<a href=#101 id=101 data-nosnippet>101</a>                .filter(|value| <span class="kw-2">**</span>value != <span class="string">"--approve"</span>)
+<a href=#102 id=102 data-nosnippet>102</a>                .copied()
+<a href=#103 id=103 data-nosnippet>103</a>                .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
+<a href=#104 id=104 data-nosnippet>104</a>                .join(<span class="string">" "</span>);
+<a href=#105 id=105 data-nosnippet>105</a>            <span class="kw">match </span>runtime.run_goal(<span class="kw-2">&amp;</span>request, approved) {
+<a href=#106 id=106 data-nosnippet>106</a>                <span class="prelude-val">Ok</span>(result) =&gt; <span class="macro">println!</span>(<span class="string">"goal completed: {result}"</span>),
+<a href=#107 id=107 data-nosnippet>107</a>                <span class="prelude-val">Err</span>(error) =&gt; fail(error),
+<a href=#108 id=108 data-nosnippet>108</a>            }
+<a href=#109 id=109 data-nosnippet>109</a>        },
+<a href=#110 id=110 data-nosnippet>110</a>        [<span class="string">"autonomy"</span>, <span class="string">"envelope"</span>, ..] =&gt; print_envelope(<span class="kw-2">&amp;</span>runtime.autonomy_envelope()),
+<a href=#111 id=111 data-nosnippet>111</a>        [<span class="string">"autonomy"</span>, <span class="string">"profile"</span>, profile] =&gt; {
+<a href=#112 id=112 data-nosnippet>112</a>            <span class="kw">let </span>profile = <span class="kw">match </span><span class="kw-2">*</span>profile {
+<a href=#113 id=113 data-nosnippet>113</a>                <span class="string">"manual" </span>=&gt; IntelligenceProfile::Manual,
+<a href=#114 id=114 data-nosnippet>114</a>                <span class="string">"assisted" </span>=&gt; IntelligenceProfile::Assisted,
+<a href=#115 id=115 data-nosnippet>115</a>                <span class="string">"supervised" </span>=&gt; IntelligenceProfile::Supervised,
+<a href=#116 id=116 data-nosnippet>116</a>                <span class="string">"autonomous" </span>=&gt; IntelligenceProfile::Autonomous,
+<a href=#117 id=117 data-nosnippet>117</a>                <span class="kw">_ </span>=&gt; {
+<a href=#118 id=118 data-nosnippet>118</a>                    <span class="macro">eprintln!</span>(<span class="string">"unknown autonomy profile; expected manual, assisted, supervised, or autonomous"</span>);
+<a href=#119 id=119 data-nosnippet>119</a>                    <span class="kw">return</span>;
+<a href=#120 id=120 data-nosnippet>120</a>                }
+<a href=#121 id=121 data-nosnippet>121</a>            };
+<a href=#122 id=122 data-nosnippet>122</a>            runtime.intelligence.policy = nexus_runtime::AutonomyPolicy::for_profile(profile);
+<a href=#123 id=123 data-nosnippet>123</a>            print_envelope(<span class="kw-2">&amp;</span>runtime.autonomy_envelope());
+<a href=#124 id=124 data-nosnippet>124</a>        },
+<a href=#125 id=125 data-nosnippet>125</a>        [<span class="string">"bench"</span>, <span class="string">"simple-robot"</span>, ..] =&gt; <span class="kw">match </span>runtime.run_simple_robot_test() {
+<a href=#126 id=126 data-nosnippet>126</a>            <span class="prelude-val">Ok</span>(result) =&gt; <span class="macro">println!</span>(<span class="string">"{result}"</span>),
+<a href=#127 id=127 data-nosnippet>127</a>            <span class="prelude-val">Err</span>(error) =&gt; fail(error),
+<a href=#128 id=128 data-nosnippet>128</a>        },
+<a href=#129 id=129 data-nosnippet>129</a>        [<span class="string">"prove"</span>, <span class="string">"skill"</span>, skill, rest @ ..] =&gt; {
+<a href=#130 id=130 data-nosnippet>130</a>            <span class="kw">let </span>trials = option(rest, <span class="string">"--trials"</span>).and_then(|value| value.parse().ok()).unwrap_or(<span class="number">100</span>);
+<a href=#131 id=131 data-nosnippet>131</a>            <span class="kw">let </span>seed = option(rest, <span class="string">"--seed"</span>).and_then(|value| value.parse().ok()).unwrap_or(<span class="number">483_208</span>);
+<a href=#132 id=132 data-nosnippet>132</a>            <span class="kw">let </span>report = ProvingGround::prove_skill(skill, trials, seed);
+<a href=#133 id=133 data-nosnippet>133</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(path) = option(rest, <span class="string">"--output"</span>) {
+<a href=#134 id=134 data-nosnippet>134</a>                <span class="kw">match </span>report.write_markdown(path) {
+<a href=#135 id=135 data-nosnippet>135</a>                    <span class="prelude-val">Ok</span>(()) =&gt; <span class="macro">println!</span>(<span class="string">"Proving Ground report written: {path}\nHighest earned: {}"</span>, report.highest_earned().label()),
+<a href=#136 id=136 data-nosnippet>136</a>                    <span class="prelude-val">Err</span>(error) =&gt; <span class="macro">eprintln!</span>(<span class="string">"unable to write report: {error}"</span>),
+<a href=#137 id=137 data-nosnippet>137</a>                }
+<a href=#138 id=138 data-nosnippet>138</a>            } <span class="kw">else </span>{
+<a href=#139 id=139 data-nosnippet>139</a>                <span class="macro">println!</span>(<span class="string">"{}"</span>, report.render_markdown());
+<a href=#140 id=140 data-nosnippet>140</a>            }
+<a href=#141 id=141 data-nosnippet>141</a>        },
+<a href=#142 id=142 data-nosnippet>142</a>        [<span class="string">"prove"</span>, <span class="string">"all"</span>, rest @ ..] =&gt; {
+<a href=#143 id=143 data-nosnippet>143</a>            <span class="kw">let </span>trials = option(rest, <span class="string">"--trials"</span>).and_then(|value| value.parse().ok()).unwrap_or(<span class="number">100</span>);
+<a href=#144 id=144 data-nosnippet>144</a>            <span class="kw">for </span>skill <span class="kw">in </span>[<span class="string">"fetch-object"</span>, <span class="string">"sense-hopping"</span>, <span class="string">"door-scan"</span>, <span class="string">"doorway-learning"</span>] {
+<a href=#145 id=145 data-nosnippet>145</a>                <span class="kw">let </span>report = ProvingGround::prove_skill(skill, trials, <span class="number">483_208</span>);
+<a href=#146 id=146 data-nosnippet>146</a>                <span class="macro">println!</span>(<span class="string">"{skill}: {} ({} / {} success; {} safe aborts)"</span>, report.highest_earned().label(), report.success_count(), report.trials.len(), report.safe_abort_count());
+<a href=#147 id=147 data-nosnippet>147</a>            }
+<a href=#148 id=148 data-nosnippet>148</a>        },
+<a href=#149 id=149 data-nosnippet>149</a>        [<span class="string">"prove"</span>, <span class="string">"profile"</span>, profile] <span class="kw">if </span><span class="kw-2">*</span>profile == <span class="string">"cheap-mobile-robot" </span>=&gt; {
+<a href=#150 id=150 data-nosnippet>150</a>            <span class="kw">let </span>profile = HardwareProfile::minimum_robot();
+<a href=#151 id=151 data-nosnippet>151</a>            <span class="kw">let </span>plan = AdaptiveRuntimePlanner::plan(<span class="kw-2">&amp;</span>profile);
+<a href=#152 id=152 data-nosnippet>152</a>            <span class="kw">let </span>warnings = profile.validation_warnings();
+<a href=#153 id=153 data-nosnippet>153</a>            <span class="macro">println!</span>(<span class="string">"PROFILE EMULATION PASS\nProfile: {}\nRecommended intelligence: {}\nSenseHopping: {:?}\nStructureScan: {:?}\nWarnings: {}\nCompatibility: C1 Emulated (not HIL or hardware validated)"</span>, profile.name, plan.class.label(), plan.sense_hopping, plan.structure_scan, warnings.len());
+<a href=#154 id=154 data-nosnippet>154</a>        },
+<a href=#155 id=155 data-nosnippet>155</a>        [<span class="string">"sense"</span>, <span class="string">"list"</span>, ..] =&gt; <span class="kw">for </span>provider <span class="kw">in </span>runtime.senses.providers() { <span class="macro">println!</span>(<span class="string">"{}\t{:?}\tconfidence={:.2}\t{:?}"</span>, provider.id, provider.provides, provider.confidence, provider.health); },
+<a href=#156 id=156 data-nosnippet>156</a>        [<span class="string">"sense"</span>, <span class="string">"plan"</span>, requirement] =&gt; { <span class="kw">let </span>requirement = <span class="kw">match </span><span class="kw-2">*</span>requirement { <span class="string">"obstacle-distance" </span>=&gt; InformationType::ObstacleDistance, <span class="string">"spatial-geometry" </span>=&gt; InformationType::SpatialGeometry, <span class="string">"door-geometry" </span>=&gt; InformationType::DoorGeometry, <span class="kw">_ </span>=&gt; { <span class="macro">eprintln!</span>(<span class="string">"unknown information requirement"</span>); <span class="kw">return</span>; } }; <span class="kw">match </span>runtime.senses.route(requirement, EnvironmentCondition::Normal) { <span class="prelude-val">Ok</span>(plan) =&gt; <span class="macro">println!</span>(<span class="string">"Primary: {}\nSecondary: {:?}\nFusion: {:?}\nReason: {}"</span>, plan.primary, plan.secondary, plan.fused, plan.reason), <span class="prelude-val">Err</span>(error) =&gt; <span class="macro">eprintln!</span>(<span class="string">"sense plan failed: {error:?}"</span>), } },
+<a href=#157 id=157 data-nosnippet>157</a>        [<span class="string">"structure"</span>, <span class="string">"scan"</span>, ..] =&gt; { <span class="kw">let </span>door = <span class="kw-2">&amp;</span>runtime.structure_model.doors[<span class="string">"D-118"</span>]; <span class="macro">println!</span>(<span class="string">"StructureScan\nRevision: {}\nDoor: {}\nState: {:?}\nHinge: {:?} ({:.0}%)\nMaterial: {:?} ({:.0}%)"</span>, runtime.structure_model.revision, door.id, door.state, door.hinge_side, door.hinge_confidence * <span class="number">100.0</span>, door.material.category, door.material.confidence * <span class="number">100.0</span>); },
+<a href=#158 id=158 data-nosnippet>158</a>        [<span class="string">"structure"</span>, <span class="string">"diff"</span>, ..] =&gt; <span class="kw">match </span>runtime.structure_model.mutate_door(<span class="string">"D-118"</span>, nexus_runtime::DoorState::Open) { <span class="prelude-val">Some</span>(diff) =&gt; <span class="macro">println!</span>(<span class="string">"StructureDiff: revision {} -&gt; {}\n{:?}"</span>, diff.from_revision, diff.to_revision, diff.changes), <span class="prelude-val">None </span>=&gt; <span class="macro">eprintln!</span>(<span class="string">"structure diff failed"</span>), },
+<a href=#159 id=159 data-nosnippet>159</a>        [<span class="string">"learn"</span>, <span class="string">"create"</span>, ..] =&gt; { <span class="kw">let </span>session = doorway_learning_session(); <span class="macro">println!</span>(<span class="string">"Learning session {}\nTask: {}\nBudget: {} attempts, {} seconds\nStage: {:?}"</span>, session.id, session.task, session.budget.max_attempts, session.budget.max_duration_s, session.stage); },
+<a href=#160 id=160 data-nosnippet>160</a>        [<span class="string">"learn"</span>, <span class="string">"start"</span>, ..] =&gt; <span class="kw">match </span>runtime.run_unfamiliar_door_challenge() { <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="macro">println!</span>(<span class="string">"Active Learning completed in simulation. Candidate proposal recorded in replay; no production skill was changed."</span>), <span class="prelude-val">Err</span>(error) =&gt; fail(error) },
+<a href=#161 id=161 data-nosnippet>161</a>        [<span class="string">"learn"</span>, <span class="string">"status"</span>, ..] =&gt; <span class="macro">println!</span>(<span class="string">"Learning mode: simulation-first\nProduction promotion: disabled\nPhysical learning: requires explicit hardware enablement and validation."</span>),
+<a href=#162 id=162 data-nosnippet>162</a>        [<span class="string">"compatibility"</span>, <span class="string">"inspect"</span>, profile] <span class="kw">if </span><span class="kw-2">*</span>profile == <span class="string">"nori-a3" </span>=&gt; { <span class="kw">let </span>manifest = nori_a3_manifest(); <span class="kw">let </span>compatible = runtime.skills.list().filter(|skill| runtime.skills.compatibility(<span class="kw-2">&amp;</span>skill.name, <span class="kw-2">&amp;</span>manifest.base).is_ok_and(|result| result.compatible)).count(); <span class="macro">println!</span>(<span class="string">"NORI COMPATIBILITY SIMULATION\nRobot capabilities: {}\nCompatible built-in skills: {compatible}\nCommunity Integration; no vendor endorsement or physical-hardware claim."</span>, manifest.records.len()); },
+<a href=#163 id=163 data-nosnippet>163</a>        [<span class="string">"package"</span>, action, path] <span class="kw">if </span><span class="kw-2">*</span>action == <span class="string">"validate" </span>|| <span class="kw-2">*</span>action == <span class="string">"inspect" </span>=&gt; <span class="kw">match </span>std::fs::read_to_string(<span class="kw-2">*</span>path).ok().and_then(|content| PackageManifest::parse(<span class="kw-2">&amp;</span>content).ok()) { <span class="prelude-val">Some</span>(manifest) <span class="kw">if </span><span class="kw-2">*</span>action == <span class="string">"validate" </span>=&gt; <span class="macro">println!</span>(<span class="string">"NRP valid: {} {} ({:?})"</span>, manifest.name, manifest.version, manifest.package_type), <span class="prelude-val">Some</span>(manifest) =&gt; { <span class="kw">let </span>inspection = manifest.inspect(); <span class="macro">println!</span>(<span class="string">"{}\nhash: {}\nsigned: {}\nproduction allowed: {}\n{}"</span>, manifest.name, inspection.content_hash, inspection.signed, inspection.production_allowed, inspection.warnings.join(<span class="string">"\n"</span>)); }, <span class="prelude-val">None </span>=&gt; <span class="macro">eprintln!</span>(<span class="string">"invalid NRP manifest; required fields: name, version, type"</span>), },
+<a href=#164 id=164 data-nosnippet>164</a>        [<span class="string">"integration"</span>, <span class="string">"create"</span>, rest @ ..] =&gt; { <span class="kw">let </span>name = option(rest, <span class="string">"--name"</span>).unwrap_or(<span class="string">"nexus-adapter"</span>); <span class="kw">let </span>transport = option(rest, <span class="string">"--transport"</span>).unwrap_or(<span class="string">"serial"</span>); <span class="macro">println!</span>(<span class="string">"{}"</span>, scaffold(name, transport, <span class="kw-2">&amp;</span>[<span class="string">"telemetry.read"</span>])); },
+<a href=#165 id=165 data-nosnippet>165</a>        [<span class="string">"telemetry"</span>, ..] =&gt; <span class="macro">println!</span>(<span class="string">"battery={:.1}% pose=({:.2},{:.2}) network={} safety={} virtual={:?}"</span>, runtime.robot.battery_percent, runtime.robot.pose.x, runtime.robot.pose.y, runtime.robot.network_connected, runtime.robot.safety_state.label(), runtime.virtual_bus.telemetry()),
+<a href=#166 id=166 data-nosnippet>166</a>        [<span class="string">"doctor"</span>, ..] =&gt; <span class="macro">println!</span>(<span class="string">"runtime: OK\nsimulator: OK (NXR-1/NXR-2 deterministic)\nVirtualBus: OK\nNori adapter: community simulated profile available\nLeRobot adapter: dataset bridge available\nROS 2: planned optional adapter\nsecurity: unsigned NRP packages restricted to development"</span>),
+<a href=#167 id=167 data-nosnippet>167</a>        <span class="kw">_ </span>=&gt; usage(),
+<a href=#168 id=168 data-nosnippet>168</a>    }
+<a href=#169 id=169 data-nosnippet>169</a>}
+<a href=#170 id=170 data-nosnippet>170</a><span class="kw">fn </span>option&lt;<span class="lifetime">'a</span>&gt;(args: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[<span class="kw-2">&amp;</span>str], flag: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt; {
+<a href=#171 id=171 data-nosnippet>171</a>    args.iter()
+<a href=#172 id=172 data-nosnippet>172</a>        .position(|value| <span class="kw-2">*</span>value == flag)
+<a href=#173 id=173 data-nosnippet>173</a>        .and_then(|index| args.get(index + <span class="number">1</span>))
+<a href=#174 id=174 data-nosnippet>174</a>        .copied()
+<a href=#175 id=175 data-nosnippet>175</a>}
+<a href=#176 id=176 data-nosnippet>176</a><span class="kw">fn </span>fail(error: <span class="kw">impl </span>std::fmt::Display) {
+<a href=#177 id=177 data-nosnippet>177</a>    <span class="macro">eprintln!</span>(<span class="string">"command failed: {error}"</span>);
+<a href=#178 id=178 data-nosnippet>178</a>}
+<a href=#179 id=179 data-nosnippet>179</a>
+<a href=#180 id=180 data-nosnippet>180</a><span class="kw">fn </span>print_goal_plan(plan: <span class="kw-2">&amp;</span>nexus_runtime::GoalPlan) {
+<a href=#181 id=181 data-nosnippet>181</a>    <span class="macro">println!</span>(
+<a href=#182 id=182 data-nosnippet>182</a>        <span class="string">"Goal plan: {}\nState: {:?}\nRisk: {:?}\nExpected duration: {} seconds"</span>,
+<a href=#183 id=183 data-nosnippet>183</a>        plan.goal.objective, plan.state, plan.risk, plan.expected_duration_s
+<a href=#184 id=184 data-nosnippet>184</a>    );
+<a href=#185 id=185 data-nosnippet>185</a>    <span class="kw">for </span>(index, step) <span class="kw">in </span>plan.steps.iter().enumerate() {
+<a href=#186 id=186 data-nosnippet>186</a>        <span class="kw">let </span>permission = step
+<a href=#187 id=187 data-nosnippet>187</a>            .permission
+<a href=#188 id=188 data-nosnippet>188</a>            .map(|permission| <span class="macro">format!</span>(<span class="string">"; permission={permission:?}"</span>))
+<a href=#189 id=189 data-nosnippet>189</a>            .unwrap_or_default();
+<a href=#190 id=190 data-nosnippet>190</a>        <span class="kw">let </span>target = step
+<a href=#191 id=191 data-nosnippet>191</a>            .target
+<a href=#192 id=192 data-nosnippet>192</a>            .as_deref()
+<a href=#193 id=193 data-nosnippet>193</a>            .map(|target| <span class="macro">format!</span>(<span class="string">" target={target}"</span>))
+<a href=#194 id=194 data-nosnippet>194</a>            .unwrap_or_default();
+<a href=#195 id=195 data-nosnippet>195</a>        <span class="macro">println!</span>(
+<a href=#196 id=196 data-nosnippet>196</a>            <span class="string">"{}. {}{}{}\n   {}"</span>,
+<a href=#197 id=197 data-nosnippet>197</a>            index + <span class="number">1</span>,
+<a href=#198 id=198 data-nosnippet>198</a>            step.skill,
+<a href=#199 id=199 data-nosnippet>199</a>            target,
+<a href=#200 id=200 data-nosnippet>200</a>            permission,
+<a href=#201 id=201 data-nosnippet>201</a>            step.rationale
+<a href=#202 id=202 data-nosnippet>202</a>        );
+<a href=#203 id=203 data-nosnippet>203</a>    }
+<a href=#204 id=204 data-nosnippet>204</a>    <span class="macro">println!</span>(
+<a href=#205 id=205 data-nosnippet>205</a>        <span class="string">"Required capabilities: {}"</span>,
+<a href=#206 id=206 data-nosnippet>206</a>        plan.required_capabilities.join(<span class="string">", "</span>)
+<a href=#207 id=207 data-nosnippet>207</a>    );
+<a href=#208 id=208 data-nosnippet>208</a>}
+<a href=#209 id=209 data-nosnippet>209</a>
+<a href=#210 id=210 data-nosnippet>210</a><span class="kw">fn </span>print_envelope(envelope: <span class="kw-2">&amp;</span>nexus_runtime::OperatingEnvelope) {
+<a href=#211 id=211 data-nosnippet>211</a>    <span class="macro">println!</span>(
+<a href=#212 id=212 data-nosnippet>212</a>        <span class="string">"Operating envelope\nAllowed: {}\nApproval required: {}\nProhibited: {}"</span>,
+<a href=#213 id=213 data-nosnippet>213</a>        envelope.allowed.join(<span class="string">", "</span>),
+<a href=#214 id=214 data-nosnippet>214</a>        envelope.approval_required.join(<span class="string">", "</span>),
+<a href=#215 id=215 data-nosnippet>215</a>        envelope.prohibited.join(<span class="string">", "</span>)
+<a href=#216 id=216 data-nosnippet>216</a>    );
+<a href=#217 id=217 data-nosnippet>217</a>}
+<a href=#218 id=218 data-nosnippet>218</a>
+<a href=#219 id=219 data-nosnippet>219</a><span class="kw">fn </span>print_hardware_profile(profile: <span class="kw-2">&amp;</span>HardwareProfile) {
+<a href=#220 id=220 data-nosnippet>220</a>    <span class="kw">let </span>index = CapabilityIndex::evaluate(profile);
+<a href=#221 id=221 data-nosnippet>221</a>    <span class="kw">let </span>plan = AdaptiveRuntimePlanner::plan(profile);
+<a href=#222 id=222 data-nosnippet>222</a>    <span class="macro">println!</span>(
+<a href=#223 id=223 data-nosnippet>223</a>        <span class="string">"Nexus Hardware Profile\nRobot: {} ({})\nCompute: {} / {} cores / {} MB RAM / {} GB storage\nSensors: {} RGB, {} depth, lidar={}, IMU={}, range={}\nMovement: motors={}, servos={}, arms={}, grippers={}\nNetwork: {}\n\nNCI\nCompute {}  Memory {}  Perception {}\nMobility {}  Manipulation {}  Connectivity {}  Acceleration {}\nRecommended: {}\nSenseHopping: {:?}\nStructureScan: {:?}"</span>,
+<a href=#224 id=224 data-nosnippet>224</a>        profile.name,
+<a href=#225 id=225 data-nosnippet>225</a>        profile.robot_type,
+<a href=#226 id=226 data-nosnippet>226</a>        profile.architecture,
+<a href=#227 id=227 data-nosnippet>227</a>        profile.cpu_cores,
+<a href=#228 id=228 data-nosnippet>228</a>        profile.ram_mb,
+<a href=#229 id=229 data-nosnippet>229</a>        profile.storage_gb,
+<a href=#230 id=230 data-nosnippet>230</a>        profile.rgb_cameras,
+<a href=#231 id=231 data-nosnippet>231</a>        profile.depth_cameras,
+<a href=#232 id=232 data-nosnippet>232</a>        profile.lidar,
+<a href=#233 id=233 data-nosnippet>233</a>        profile.imu,
+<a href=#234 id=234 data-nosnippet>234</a>        profile.range_sensors,
+<a href=#235 id=235 data-nosnippet>235</a>        profile.motors,
+<a href=#236 id=236 data-nosnippet>236</a>        profile.servos,
+<a href=#237 id=237 data-nosnippet>237</a>        profile.arms,
+<a href=#238 id=238 data-nosnippet>238</a>        profile.grippers,
+<a href=#239 id=239 data-nosnippet>239</a>        profile.network_connected,
+<a href=#240 id=240 data-nosnippet>240</a>        index.compute,
+<a href=#241 id=241 data-nosnippet>241</a>        index.memory,
+<a href=#242 id=242 data-nosnippet>242</a>        index.perception,
+<a href=#243 id=243 data-nosnippet>243</a>        index.mobility,
+<a href=#244 id=244 data-nosnippet>244</a>        index.manipulation,
+<a href=#245 id=245 data-nosnippet>245</a>        index.connectivity,
+<a href=#246 id=246 data-nosnippet>246</a>        index.acceleration,
+<a href=#247 id=247 data-nosnippet>247</a>        index.recommended.label(),
+<a href=#248 id=248 data-nosnippet>248</a>        plan.sense_hopping,
+<a href=#249 id=249 data-nosnippet>249</a>        plan.structure_scan,
+<a href=#250 id=250 data-nosnippet>250</a>    );
+<a href=#251 id=251 data-nosnippet>251</a>}
+<a href=#252 id=252 data-nosnippet>252</a>
+<a href=#253 id=253 data-nosnippet>253</a><span class="kw">fn </span>print_brain_plan(profile: <span class="kw-2">&amp;</span>HardwareProfile, plan: <span class="kw-2">&amp;</span>nexus_runtime::AdaptiveRuntimePlan) {
+<a href=#254 id=254 data-nosnippet>254</a>    <span class="macro">println!</span>(
+<a href=#255 id=255 data-nosnippet>255</a>        <span class="string">"Nexus Brain\nProfile: {}\nRecommended intelligence: {}\n\nMemCore\nRuntime: {} MB\nPerception: {} MB\nWorld state: {} MB\nPlanner: {} MB\nModel: {} MB\nReserve: {} MB\n\nLocal: {}\nEdge eligible: {}\nDisabled: {}\nNetwork host: not configured"</span>,
+<a href=#256 id=256 data-nosnippet>256</a>        profile.name,
+<a href=#257 id=257 data-nosnippet>257</a>        plan.class.label(),
+<a href=#258 id=258 data-nosnippet>258</a>        plan.memory.runtime_mb,
+<a href=#259 id=259 data-nosnippet>259</a>        plan.memory.perception_mb,
+<a href=#260 id=260 data-nosnippet>260</a>        plan.memory.world_state_mb,
+<a href=#261 id=261 data-nosnippet>261</a>        plan.memory.planner_mb,
+<a href=#262 id=262 data-nosnippet>262</a>        plan.memory.model_mb,
+<a href=#263 id=263 data-nosnippet>263</a>        plan.memory.reserve_mb,
+<a href=#264 id=264 data-nosnippet>264</a>        plan.local_workloads.join(<span class="string">", "</span>),
+<a href=#265 id=265 data-nosnippet>265</a>        <span class="kw">if </span>plan.edge_eligible.is_empty() { <span class="string">"none"</span>.into() } <span class="kw">else </span>{ plan.edge_eligible.join(<span class="string">", "</span>) },
+<a href=#266 id=266 data-nosnippet>266</a>        <span class="kw">if </span>plan.disabled.is_empty() { <span class="string">"none"</span>.into() } <span class="kw">else </span>{ plan.disabled.join(<span class="string">", "</span>) },
+<a href=#267 id=267 data-nosnippet>267</a>    );
+<a href=#268 id=268 data-nosnippet>268</a>}
+<a href=#269 id=269 data-nosnippet>269</a>
+<a href=#270 id=270 data-nosnippet>270</a><span class="kw">fn </span>print_model_recommendations(profile: <span class="kw-2">&amp;</span>HardwareProfile) {
+<a href=#271 id=271 data-nosnippet>271</a>    <span class="kw">let </span>plan = AdaptiveRuntimePlanner::plan(profile);
+<a href=#272 id=272 data-nosnippet>272</a>    <span class="macro">println!</span>(
+<a href=#273 id=273 data-nosnippet>273</a>        <span class="string">"Model recommendations for {}\nSmall deterministic planner: supported locally"</span>,
+<a href=#274 id=274 data-nosnippet>274</a>        profile.name
+<a href=#275 id=275 data-nosnippet>275</a>    );
+<a href=#276 id=276 data-nosnippet>276</a>    <span class="kw">if </span>plan.class &gt;= nexus_runtime::IntelligenceClass::N2Adaptive {
+<a href=#277 id=277 data-nosnippet>277</a>        <span class="macro">println!</span>(
+<a href=#278 id=278 data-nosnippet>278</a>            <span class="string">"Compact perception model: eligible within MemCore model budget ({} MB)"</span>,
+<a href=#279 id=279 data-nosnippet>279</a>            plan.memory.model_mb
+<a href=#280 id=280 data-nosnippet>280</a>        );
+<a href=#281 id=281 data-nosnippet>281</a>    } <span class="kw">else </span>{
+<a href=#282 id=282 data-nosnippet>282</a>        <span class="macro">println!</span>(<span class="string">"Compact perception model: not recommended locally; use an approved Brain host when available"</span>);
+<a href=#283 id=283 data-nosnippet>283</a>    }
+<a href=#284 id=284 data-nosnippet>284</a>    <span class="kw">if </span>plan.class &gt;= nexus_runtime::IntelligenceClass::N3Intelligent {
+<a href=#285 id=285 data-nosnippet>285</a>        <span class="macro">println!</span>(<span class="string">"Large multimodal model: only after runtime-specific fit validation; current plan reserves {} MB"</span>, plan.memory.model_mb);
+<a href=#286 id=286 data-nosnippet>286</a>    } <span class="kw">else </span>{
+<a href=#287 id=287 data-nosnippet>287</a>        <span class="macro">println!</span>(<span class="string">"Large multimodal model: insufficient local profile; remote placement requires a future paired Brain host"</span>);
+<a href=#288 id=288 data-nosnippet>288</a>    }
+<a href=#289 id=289 data-nosnippet>289</a>    <span class="macro">println!</span>(<span class="string">"Safety and actuator control: LOCAL_REQUIRED; never delegated."</span>);
+<a href=#290 id=290 data-nosnippet>290</a>}
+</code></pre></div></section></main></body></html>

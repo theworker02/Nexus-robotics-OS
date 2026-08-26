@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["RosEndpointKind"],"fn":["map_endpoint"],"struct":["Ros2Adapter","RosEndpoint"]};

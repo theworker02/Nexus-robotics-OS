@@ -1,0 +1,4 @@
+name: scan_room
+version: 0.5.0
+requires: [vision.rgb]
+permissions: [camera.read]

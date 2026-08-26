@@ -1,0 +1,4 @@
+name: follow_target
+version: 0.5.0
+requires: [locomotion.control, vision.rgb]
+permissions: [locomotion.control, camera.read]

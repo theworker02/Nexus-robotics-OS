@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ActuatorCommand","Event","Health","RobotLifecycle","SafetyState","SafetyViolation","Severity","TaskLifecycle","TaskNode"],"mod":["v2","v25"],"struct":["Capability","CapabilityManifest","CapabilityQuery","Compatibility","Pose","RobotState","SafetyGovernor","StructuredLog","TaskGraph"]};

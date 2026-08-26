@@ -1,0 +1,50 @@
+<?xml version="1.0" ?>
+<sdf version="1.9">
+  <world name="nexus_doorway_lab">
+    <gravity>0 0 -9.8</gravity>
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <light name="sun" type="directional">
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision"><geometry><plane><normal>0 0 1</normal><size>20 20</size></plane></geometry></collision>
+        <visual name="visual"><geometry><plane><normal>0 0 1</normal><size>20 20</size></plane></geometry></visual>
+      </link>
+    </model>
+    <model name="doorway_reference">
+      <static>true</static>
+      <link name="wall_left"><pose>2 0 1.2 0 0 0</pose><collision name="collision"><geometry><box><size>0.1 1.1 2.4</size></box></geometry></collision><visual name="visual"><geometry><box><size>0.1 1.1 2.4</size></box></geometry></visual></link>
+      <link name="wall_right"><pose>2 2.01 1.2 0 0 0</pose><collision name="collision"><geometry><box><size>0.1 1.1 2.4</size></box></geometry></collision><visual name="visual"><geometry><box><size>0.1 1.1 2.4</size></box></geometry></visual></link>
+    </model>
+    <model name="nxr2">
+      <pose>0 1 0.14 0 0 0</pose>
+      <link name="base_link">
+        <inertial><mass>14</mass><inertia><ixx>0.25</ixx><iyy>0.32</iyy><izz>0.38</izz></inertia></inertial>
+        <collision name="collision"><geometry><box><size>0.72 0.48 0.22</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.72 0.48 0.22</size></box></geometry><material><diffuse>0.08 0.22 0.42 1</diffuse></material></visual>
+      </link>
+      <link name="left_wheel"><pose>0 0.29 0 1.5708 0 0</pose><inertial><mass>0.6</mass><inertia><ixx>0.002</ixx><iyy>0.002</iyy><izz>0.002</izz></inertia></inertial><collision name="collision"><geometry><cylinder><radius>0.12</radius><length>0.06</length></cylinder></geometry></collision><visual name="visual"><geometry><cylinder><radius>0.12</radius><length>0.06</length></cylinder></geometry></visual></link>
+      <link name="right_wheel"><pose>0 -0.29 0 1.5708 0 0</pose><inertial><mass>0.6</mass><inertia><ixx>0.002</ixx><iyy>0.002</iyy><izz>0.002</izz></inertia></inertial><collision name="collision"><geometry><cylinder><radius>0.12</radius><length>0.06</length></cylinder></geometry></collision><visual name="visual"><geometry><cylinder><radius>0.12</radius><length>0.06</length></cylinder></geometry></visual></link>
+      <joint name="left_wheel_joint" type="revolute"><parent>base_link</parent><child>left_wheel</child><axis><xyz>0 1 0</xyz><limit><lower>-1e16</lower><upper>1e16</upper></limit></axis></joint>
+      <joint name="right_wheel_joint" type="revolute"><parent>base_link</parent><child>right_wheel</child><axis><xyz>0 1 0</xyz><limit><lower>-1e16</lower><upper>1e16</upper></limit></axis></joint>
+      <plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
+        <left_joint>left_wheel_joint</left_joint><right_joint>right_wheel_joint</right_joint>
+        <wheel_separation>0.58</wheel_separation><wheel_radius>0.12</wheel_radius>
+        <topic>/cmd_vel</topic>
+      </plugin>
+      <plugin filename="gz-sim-pose-publisher-system" name="gz::sim::systems::PosePublisher">
+        <publish_link_pose>true</publish_link_pose><publish_model_pose>true</publish_model_pose>
+        <use_pose_vector_msg>true</use_pose_vector_msg><static_publisher>true</static_publisher>
+        <topic>/pose/info</topic>
+      </plugin>
+      <plugin filename="gz-sim-joint-state-publisher-system" name="gz::sim::systems::JointStatePublisher"><topic>/joint_states</topic></plugin>
+    </model>
+  </world>
+</sdf>

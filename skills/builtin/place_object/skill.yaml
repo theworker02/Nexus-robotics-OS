@@ -1,0 +1,4 @@
+name: place_object
+version: 0.5.0
+requires: [manipulators.right.gripper]
+permissions: [manipulator.right.control]

@@ -1,0 +1,7 @@
+name: Skill proposal
+description: Propose a portable robot skill
+body:
+  - type: input
+    attributes: { label: Skill name }
+  - type: textarea
+    attributes: { label: Requirements, description: Include capabilities, permissions, recovery, and verification level. }

@@ -1,0 +1,9 @@
+[package]
+name = "nexus-nori-adapter"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+nexus-core = { path = "../../../crates/nexus-core" }
+nexus-protocol = { path = "../../../crates/nexus-protocol" }

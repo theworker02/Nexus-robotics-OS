@@ -1,0 +1,7 @@
+name: nexus-nori
+version: 2.0.0
+type: integration
+nexus: ">=2.0"
+components:
+  - nori-adapter
+  - lerobot-bridge

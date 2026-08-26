@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ComputePlacement","FeatureLevel","IntelligenceClass"],"fn":["capabilities_from_profile","manifest_from_profile","upgrade_advisor"],"struct":["AdaptiveRuntimePlan","AdaptiveRuntimePlanner","CapabilityIndex","HardwareProfile","MemCorePlan","UpgradeRecommendation"]};

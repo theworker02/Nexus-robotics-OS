@@ -1,0 +1,27 @@
+[workspace]
+members = [
+  "crates/nexus-core",
+  "crates/nexus-runtime",
+  "crates/nexus-protocol",
+  "crates/nexus-brain",
+  "crates/nexus-gateway",
+  "crates/nexus-fleet",
+  "apps/cli",
+  "apps/nexusd",
+  "sdk/rust",
+  "sdk/integration",
+  "integrations/nori/adapter",
+  "integrations/lerobot",
+  "integrations/ros2",
+]
+resolver = "2"
+
+[workspace.package]
+version = "4.2.0-rc.1"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/magnexis/nexus-robotics"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+missing_docs = "warn"

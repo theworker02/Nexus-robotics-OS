@@ -1,0 +1,9 @@
+name: Bug report
+description: Report a reproducible Nexus defect
+body:
+  - type: textarea
+    attributes: { label: What happened, description: Include expected and actual behavior. }
+  - type: input
+    attributes: { label: Nexus version }
+  - type: textarea
+    attributes: { label: Safety impact, description: State whether physical hardware was involved. }

@@ -1,0 +1,4 @@
+name: pick_up
+version: 0.5.0
+requires: [vision.rgb, manipulators.right.gripper]
+permissions: [camera.read, manipulator.right.control]

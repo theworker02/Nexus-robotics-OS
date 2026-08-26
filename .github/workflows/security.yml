@@ -1,0 +1,12 @@
+name: Security checks
+on: [push, pull_request]
+jobs:
+  cargo-deny-baseline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo test --workspace
+      - name: Check for tracked credential files
+        run: |
+          ! git ls-files | grep -E '(^|/)(\.env|id_rsa|.*\.pem)$'

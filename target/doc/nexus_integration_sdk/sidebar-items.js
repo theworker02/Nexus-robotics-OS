@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["AdapterError","DeploymentMode"],"fn":["scaffold"],"struct":["CapabilityManifestV2"],"trait":["RobotAdapter"]};

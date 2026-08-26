@@ -1,0 +1,31 @@
+[robot]
+name = "Minimum Robot"
+type = "mobile-robot"
+
+[compute]
+architecture = "aarch64"
+cores = 2
+ram_mb = 1024
+storage_gb = 16
+gpu = false
+npu = false
+
+[vision]
+rgb_cameras = 1
+depth_cameras = 0
+
+[sensing]
+imu = true
+lidar = false
+proximity = 3
+
+[mobility]
+motors = 2
+servos = 0
+
+[manipulation]
+arms = 0
+grippers = 0
+
+[connectivity]
+network = true

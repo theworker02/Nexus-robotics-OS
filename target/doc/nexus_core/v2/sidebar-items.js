@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["AdapterError","CapabilitySourceType","DeploymentMode","TaskNodeV2","TaskPriority"],"fn":["shadow_assess"],"struct":["CapabilityManifestV2","CapabilityProvenance","CapabilityRecord","DigitalTwin","MotionPolicy","ShadowAssessment","TaskGraphV2","VendorLimits"],"trait":["PhysicsBackend","RobotAdapter"]};

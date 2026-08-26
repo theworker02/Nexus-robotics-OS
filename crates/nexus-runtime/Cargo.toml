@@ -1,0 +1,10 @@
+[package]
+name = "nexus-runtime"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+nexus-core = { path = "../nexus-core" }
+nexus-protocol = { path = "../nexus-protocol" }
+nexus-brain = { path = "../nexus-brain" }

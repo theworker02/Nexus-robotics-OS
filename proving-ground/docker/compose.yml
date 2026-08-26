@@ -1,0 +1,80 @@
+services:
+  proving-ground:
+    build:
+      context: ../..
+      dockerfile: docker/Dockerfile
+    command: ["prove", "all", "--trials", "100"]
+    profiles: ["virtual"]
+    read_only: true
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+  gazebo-harmonic:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.gazebo
+    command: ["gz", "sim", "-s", "-r", "/opt/nexus/worlds/doorway-lab.sdf"]
+    profiles: ["physics"]
+    read_only: true
+    environment:
+      HOME: /tmp
+      XDG_CACHE_HOME: /tmp/cache
+      GZ_LOG_PATH: /tmp/gz-log
+      GZ_PARTITION: nexus_proving
+    tmpfs: [/tmp]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+  gazebo-physics-smoke:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.gazebo
+    command: ["gz", "sim", "-s", "-r", "--headless-rendering", "--iterations", "100", "/opt/nexus/worlds/doorway-lab.sdf"]
+    profiles: ["physics-smoke"]
+    read_only: true
+    environment:
+      HOME: /tmp
+      XDG_CACHE_HOME: /tmp/cache
+      GZ_LOG_PATH: /tmp/gz-log
+      GZ_PARTITION: nexus_proving
+    tmpfs: [/tmp]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+  ros-gz-bridge:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.gazebo
+    command: ["ros2", "launch", "ros_gz_bridge", "ros_gz_bridge.launch.py", "bridge_name:=nexus_proving", "config_file:=/opt/nexus/bridge/topics.yaml"]
+    depends_on: [gazebo-harmonic]
+    profiles: ["physics"]
+    read_only: true
+    environment:
+      HOME: /tmp
+      ROS_LOG_DIR: /tmp/ros-log
+      GZ_PARTITION: nexus_proving
+    tmpfs: [/tmp]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+  nexus-physics-adapter:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.gazebo
+    command: ["python3", "/opt/nexus/controller/nexus_physics_adapter.py"]
+    depends_on: [gazebo-harmonic, ros-gz-bridge]
+    profiles: ["physics-skill"]
+    read_only: true
+    environment:
+      HOME: /tmp
+      ROS_LOG_DIR: /tmp/ros-log
+      GZ_PARTITION: nexus_proving
+    tmpfs: [/tmp]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+  nexus-physics-e2e:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.gazebo
+    command: ["bash", "/opt/nexus/controller/run_nxr2_physics_assertion.sh"]
+    profiles: ["physics-e2e"]
+    read_only: true
+    tmpfs: [/tmp]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
