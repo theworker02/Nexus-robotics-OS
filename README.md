@@ -28,6 +28,8 @@ Nexus gives applications one stable operating model while preserving the stack a
 
 **Current channel:** `4.2.0-rc.2` — public release candidate. This release is local- and simulation-first. It does not claim universal hardware support, live ROS 2 transport, external model-provider access, live MCP/device transport, vendor certification, HIL, or production autonomy.
 
+> **Stable-release gate:** Nexus still requires testing on an actual robot before a full non-prerelease release can be published. Physical-robot results, hardware-in-the-loop evidence, vendor verification, live transport checks, safety review, and release sign-off must be recorded first. This RC must not be treated as stable software for physical deployment.
+
 ## Contents
 
 - [A visual tour](#a-visual-tour)
