@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 
 const levels = [
@@ -15,7 +16,7 @@ export default function ProvingGroundPage() {
   const [selected, setSelected] = useState(0);
   const [level, title, description] = levels[selected];
   return <main>
-    <nav className="nav"><a className="brand" href="/"><span className="mark">N</span> NEXUS</a><div className="links"><a href="/">Platform</a><a href="/sensehopping">SenseHopping</a><a href="/structurescan">StructureScan</a><a href="/active-learning">Active Learning</a></div></nav>
+    <nav className="nav"><Link className="brand" href="/"><span className="mark">N</span> NEXUS</Link><div className="links"><Link href="/">Platform</Link><Link href="/sensehopping">SenseHopping</Link><Link href="/structurescan">StructureScan</Link><Link href="/active-learning">Active Learning</Link></div></nav>
     <section className="hero"><p className="eyebrow">NEXUS PROVING GROUND</p><h1>Evidence before<br />actuators.</h1><p className="lede">A local-first certification system for proving exactly what a Nexus capability has passed—and showing what has not yet been performed.</p></section>
     <section className="feature-grid">
       <div className="model-card"><p className="panel-label">VALIDATION LADDER</p><h2>{level} — {title}</h2><p>{description}</p><div className="capability-tabs" role="tablist">{levels.map(([id], index) => <button key={id} role="tab" aria-selected={selected === index} className={selected === index ? 'active' : ''} onClick={() => setSelected(index)}>{id}</button>)}</div><div className="attempt success"><span>FOUNDATION</span> L0 + L1 evidence recorded</div><div className="attempt success"><span>PHYSICS</span> move_forward L2 verified: 0.650 m</div><div className="attempt partial"><span>ADVERSARY</span> L3 requires randomized physics faults</div><div className="attempt fail"><span>HARDWARE</span> NOT YET PERFORMED</div></div>
