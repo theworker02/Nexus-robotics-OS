@@ -55,9 +55,8 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Already published in the 4.2.0-rc.2 wave: none; this workflow publishes
-          # the complete RC.2 package set in dependency order.
-          # Existing RC.1 versions are immutable and intentionally skipped.
+          # Existing crate versions are immutable. Make this publication wave
+          # idempotent so scheduled/manual reruns safely resume where they left off.
           packages=(
             nexus-core-1
             nexus-protocol-1
@@ -77,15 +76,33 @@ jobs:
           version="4.2.0-rc.2"
 
           for package in "${packages[@]}"; do
-            if curl --fail --silent --show-error \
-              "https://crates.io/api/v1/crates/${package}/${version}" \
-              >/dev/null; then
+            # Query Cargo's registry/index path rather than the crates.io REST API.
+            # The REST endpoint can return 403/rate-limit responses even when the
+            # version already exists, which previously caused false publish attempts.
+            if cargo info "${package}@${version}" --registry crates-io >/dev/null 2>&1; then
               echo "${package} ${version} is already published; skipping."
               continue
             fi
 
             echo "Publishing ${package} ${version}..."
-            cargo publish --locked --token "$CRATES_IO_TOKEN" -p "$package"
+
+            # A race or registry-propagation delay can still make the preflight
+            # miss an existing version. Treat Cargo's immutable-version response as
+            # an idempotent success, while preserving every other publish failure.
+            set +e
+            publish_output=$(cargo publish --locked --token "$CRATES_IO_TOKEN" -p "$package" 2>&1)
+            publish_status=$?
+            set -e
+            printf '%s\n' "$publish_output"
+
+            if (( publish_status != 0 )); then
+              if grep -qiE 'already exists|already uploaded' <<<"$publish_output"; then
+                echo "${package} ${version} is already published; continuing."
+                continue
+              fi
+              exit "$publish_status"
+            fi
+
             echo "${package} uploaded; waiting ${COOLDOWN_SECONDS}s for registry propagation."
             sleep "$COOLDOWN_SECONDS"
           done
