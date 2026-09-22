@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/theworker02/Nexus-robotics-OS/releases/tag/v4.2.0-rc.2">
-    <img src="assets/brand/github-banner.svg" alt="Nexus Robotics OS â€” capability-driven robotics infrastructure" width="100%" />
+    <img src="assets/brand/github-banner.svg" alt="Nexus Robotics OS Ã¢â‚¬â€ capability-driven robotics infrastructure" width="100%" />
   </a>
 </p>
 
@@ -16,9 +16,9 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/theworker02/Nexus-robotics-OS/releases">Releases</a> Â·
-  <a href="https://magnexis.github.io/nexus-robotics">Website</a> Â·
-  <a href="docs/">Documentation</a> Â·
+  <a href="https://github.com/theworker02/Nexus-robotics-OS/releases">Releases</a> Ã‚Â·
+  <a href="https://magnexis.github.io/nexus-robotics">Website</a> Ã‚Â·
+  <a href="docs/">Documentation</a> Ã‚Â·
   <a href="CONTRIBUTING.md">Contribute</a>
 </p>
 
@@ -26,7 +26,7 @@
 
 Nexus gives applications one stable operating model while preserving the stack already in place: a simulator, ROS 2 graph, LeRobot workflow, vendor SDK, or custom adapter. Skills declare capabilities instead of robot brands. Safety remains deterministic. Evidence labels distinguish software checks from simulation, HIL, vendor, and physical-robot validation.
 
-**Current channel:** `4.2.0-rc.2` â€” public release candidate. This release is local- and simulation-first. It does not claim universal hardware support, live ROS 2 transport, external model-provider access, live MCP/device transport, vendor certification, HIL, or production autonomy.
+**Current channel:** `4.2.0-rc.2` Ã¢â‚¬â€ public release candidate. This release is local- and simulation-first. It does not claim universal hardware support, live ROS 2 transport, external model-provider access, live MCP/device transport, vendor certification, HIL, or production autonomy.
 
 > **Stable-release gate:** Nexus still requires testing on an actual robot before a full non-prerelease release can be published. Physical-robot results, hardware-in-the-loop evidence, vendor verification, live transport checks, safety review, and release sign-off must be recorded first. This RC must not be treated as stable software for physical deployment.
 
@@ -57,12 +57,12 @@ Nexus gives applications one stable operating model while preserving the stack a
 The repository currently ships branded SVG presentation assets rather than recorded robot footage. The examples below are deterministic terminal workflows and Mermaid diagrams, so they can be replayed locally without implying that a screenshot, GIF, HIL run, or physical robot demonstration exists.
 
 ```text
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚  NEXUS CLI  â†’  GOAL / TASK  â†’  POLICY + APPROVAL  â†’  SKILL           â”‚
-â”‚       â†“             â†“                 â†“                 â†“             â”‚
-â”‚  PROFILE       CAPABILITIES       SAFETY         REPLAY + TELEMETRY   â”‚
-â”‚       â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ NXR-2 SIMULATOR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜ â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+Ã¢â€Å’Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€Â
+Ã¢â€â€š  NEXUS CLI  Ã¢â€ â€™  GOAL / TASK  Ã¢â€ â€™  POLICY + APPROVAL  Ã¢â€ â€™  SKILL           Ã¢â€â€š
+Ã¢â€â€š       Ã¢â€ â€œ             Ã¢â€ â€œ                 Ã¢â€ â€œ                 Ã¢â€ â€œ             Ã¢â€â€š
+Ã¢â€â€š  PROFILE       CAPABILITIES       SAFETY         REPLAY + TELEMETRY   Ã¢â€â€š
+Ã¢â€â€š       Ã¢â€â€Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ NXR-2 SIMULATOR Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€Ëœ Ã¢â€â€š
+Ã¢â€â€Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€Ëœ
 ```
 
 ```mermaid
@@ -82,28 +82,28 @@ flowchart LR
 Robotics software is fragmented by mechanical design, middleware, simulator, training workflow, and vendor SDK. Nexus sits between those systems:
 
 ```text
-Applications Â· Studio Â· Web Console Â· CLI
-                     â”‚
+Applications Ã‚Â· Studio Ã‚Â· Web Console Ã‚Â· CLI
+                     Ã¢â€â€š
               Nexus Runtime
-                     â”‚
-  Skills Â· Tasks Â· Safety Â· Identity Â· Telemetry Â· Replay
-                     â”‚
+                     Ã¢â€â€š
+  Skills Ã‚Â· Tasks Ã‚Â· Safety Ã‚Â· Identity Ã‚Â· Telemetry Ã‚Â· Replay
+                     Ã¢â€â€š
           Nexus Capability Model (NCM)
-                     â”‚
- ROS 2 Â· LeRobot Â· Nori layer Â· Custom HAL Â· Simulator
-                     â”‚
+                     Ã¢â€â€š
+ ROS 2 Ã‚Â· LeRobot Ã‚Â· Nori layer Ã‚Â· Custom HAL Ã‚Â· Simulator
+                     Ã¢â€â€š
               Simulated or physical robot
 ```
 
-The platform does not replace a vendorâ€™s low-level controller. It makes compatible systems discoverable, observable, testable, and safer to program through shared contracts.
+The platform does not replace a vendorÃ¢â‚¬â„¢s low-level controller. It makes compatible systems discoverable, observable, testable, and safer to program through shared contracts.
 
 ## What ships in 4.2
 
-- **Nexus Brain:** hardware manifests, capability profiling, NCI scoring, N0â€“N4 recommendations, feature resolution, memory budgets, and workload guidance.
+- **Nexus Brain:** hardware manifests, capability profiling, NCI scoring, N0Ã¢â‚¬â€œN4 recommendations, feature resolution, memory budgets, and workload guidance.
 - **Deterministic runtime:** skills, tasks, permissions, safety preconditions, resource locks, watchdogs, cancellation, recovery, telemetry, and replay records.
 - **NCM 2.5:** versioned capability resources with properties, quality thresholds, alternatives, and provenance.
 - **NXR simulation:** deterministic NXR-1/NXR-2 robots, VirtualBus, virtual servos, fault injection, warehouse-fetch scenarios, and structured events.
-- **Proving Ground:** L0â€“L5 evidence labels, virtual hardware checks, seeded scenarios, and reproducible reports.
+- **Proving Ground:** L0Ã¢â‚¬â€œL5 evidence labels, virtual hardware checks, seeded scenarios, and reproducible reports.
 - **Integration foundations:** ROS 2 capability mapping, LeRobot episode contracts, Nori community compatibility surfaces, and an adapter SDK.
 - **Gateway and fleet primitives:** `nexusd`, local connection state, conservative telemetry buffering, and capability-aware scheduling.
 - **Developer surface:** Rust SDK, CLI, package metadata, examples, specifications, website, CI, and release documentation.
@@ -256,7 +256,7 @@ docker compose -f compose.dev.yml build
 docker compose -f compose.dev.yml run --rm nexus-simulator
 ```
 
-Docker Desktopâ€™s Linux engine must be running. This workflow validates software and simulation behavior; it does not establish HIL, vendor, or physical-robot evidence.
+Docker DesktopÃ¢â‚¬â„¢s Linux engine must be running. This workflow validates software and simulation behavior; it does not establish HIL, vendor, or physical-robot evidence.
 
 ## Install published crates
 
@@ -296,8 +296,8 @@ flowchart TD
 A physical command is never a direct language-model output:
 
 ```text
-Goal / Task â†’ policy and approval â†’ Skill â†’ action proposal
-          â†’ Safety policy â†’ resource arbitration â†’ Adapter â†’ Robot
+Goal / Task Ã¢â€ â€™ policy and approval Ã¢â€ â€™ Skill Ã¢â€ â€™ action proposal
+          Ã¢â€ â€™ Safety policy Ã¢â€ â€™ resource arbitration Ã¢â€ â€™ Adapter Ã¢â€ â€™ Robot
 ```
 
 Nexus combines applicable limits conservatively. Vendor limits may tighten a Nexus motion policy, but Nexus never relaxes vendor-declared limits automatically. Persistent motion is not automatically resumed after restart; operator review is required.
@@ -395,3 +395,7 @@ Nexus Robotics OS is licensed under [Apache-2.0](LICENSE).
 ## License & acquisition
 
 This project is **proprietary**. Production use, redistribution, and commercial deployment require a written commercial license or completed acquisition. See [LICENSE](./LICENSE) and [ACQUISITION.md](./ACQUISITION.md). Contact [@theworker02](https://github.com/theworker02).
+
+## Acquisition diligence
+
+Buyer-facing diligence materials live in [docs/acquisition/](./docs/acquisition/). Commercial licensing contact path: [COMMERCIAL.md](./COMMERCIAL.md).
